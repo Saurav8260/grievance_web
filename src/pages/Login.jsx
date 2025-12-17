@@ -19,8 +19,9 @@ export default function Login() {
       form.username === savedUser.username &&
       form.password === savedUser.password
     ) {
-      localStorage.setItem("isLoggedIn", "true");
-      navigate("/home");
+     localStorage.setItem("isLoggedIn", "true");
+navigate("/home");
+
     } else {
       alert("Invalid username or password");
     }

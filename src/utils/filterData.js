@@ -7,6 +7,7 @@ export const filterData = (data, filters) => {
       item.ward.toLowerCase().includes(filters.ward.toLowerCase()) &&
       item.name.toLowerCase().includes(filters.name.toLowerCase()) &&
       item.contact.toLowerCase().includes(filters.contact.toLowerCase())
+      
     );
   });
 };

@@ -1,63 +1,92 @@
 import { useState, useMemo } from "react";
 
-export const useTableFilter = (initialData) => {
-  const [globalSearch, setGlobalSearch] = useState("");
-  const [filters, setFilters] = useState({
-    block: "",
-    gp: "",
-    village: "",
-    ward: "",
-    name: "",
-    contact: "",
-    status: "",
-    dateFrom: "",
-    dateTo: "",
-  });
+const initialFilters = {
+  status: "",
+  block: "",
+  ward: "",
+  dateFrom: "",
+  dateTo: "",
+};
 
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters({ ...filters, [name]: value });
+export const useTableFilter = (data, loggedInUser = "SONU") => {
+  const [filters, setFilters] = useState({ ...initialFilters });
+  const [appliedFilters, setAppliedFilters] = useState({ ...initialFilters });
+  const [activeTab, setActiveTab] = useState("ALL");
+
+  const applyFilters = () => {
+    setAppliedFilters({ ...filters }); // ✅ CLONE
   };
 
+  const resetFilters = () => {
+    setFilters({ ...initialFilters });
+    setAppliedFilters({ ...initialFilters });
+    setActiveTab("ALL");
+  };
+
+  const parseDate = (dateStr) => {
+  // handles "DD/MM/YYYY"
+  const [dd, mm, yyyy] = dateStr.split("/");
+  return new Date(`${yyyy}-${mm}-${dd}`);
+};
+
+
   const filteredData = useMemo(() => {
-    return initialData.filter((item) => {
-      // Column filters
-      if (filters.block && !item.block?.toLowerCase().includes(filters.block.toLowerCase())) return false;
-      if (filters.gp && !item.gp?.toLowerCase().includes(filters.gp.toLowerCase())) return false;
-      if (filters.village && !item.village?.toLowerCase().includes(filters.village.toLowerCase())) return false;
-      if (filters.ward && !item.ward?.toLowerCase().includes(filters.ward.toLowerCase())) return false;
-      if (filters.name && !item.name?.toLowerCase().includes(filters.name.toLowerCase())) return false;
-      if (filters.contact && !item.contact?.toLowerCase().includes(filters.contact.toLowerCase())) return false;
-
-      // Status
-      if (filters.status && item.status !== filters.status) return false;
-
-      // Date range
-      const itemDate = new Date(item.date);
-      if (filters.dateFrom && itemDate < new Date(filters.dateFrom)) return false;
-      if (filters.dateTo && itemDate > new Date(filters.dateTo)) return false;
-
-      // Global search
-      if (globalSearch) {
-        const s = globalSearch.toLowerCase();
-        const matches =
-          (item.name?.toLowerCase().includes(s)) ||
-          (item.contact?.toLowerCase().includes(s)) ||
-          (item.block?.toLowerCase().includes(s)) ||
-          (item.gp?.toLowerCase().includes(s)) ||
-          (item.village?.toLowerCase().includes(s)) ||
-          (item.ward?.toLowerCase().includes(s)) ||
-          (item.grievanceMatter?.toLowerCase().includes(s)) ||
-          (item.topic1?.toLowerCase().includes(s)) ||
-          (item.topic2?.toLowerCase().includes(s)) ||
-          (item.topic3?.toLowerCase().includes(s));
-
-        if (!matches) return false;
+    return data.filter((item) => {
+      // Tabs
+      if (activeTab === "RECENT") {
+        const itemDate = new Date(item.date);
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        if (itemDate < sevenDaysAgo) return false;
       }
+
+      if (activeTab === "HIGH_PRIORITY" && item.priority !== "High") {
+        return false;
+      }
+
+      if (activeTab === "ASSIGNED" && item.agent !== loggedInUser) {
+        return false;
+      }
+
+      // Filters
+      if (appliedFilters.status && item.status !== appliedFilters.status)
+        return false;
+
+      if (appliedFilters.block && item.block !== appliedFilters.block)
+        return false;
+
+if (appliedFilters.ward) {
+  const match = item.location?.match(/Ward\s*(\d+)/i);
+  const wardFromLocation = match ? match[1] : "";
+
+  if (!wardFromLocation.includes(appliedFilters.ward)) {
+    return false;
+  }
+}
+
+
+if (appliedFilters.dateFrom) {
+  if (parseDate(item.date) < new Date(appliedFilters.dateFrom))
+    return false;
+}
+
+if (appliedFilters.dateTo) {
+  if (parseDate(item.date) > new Date(appliedFilters.dateTo))
+    return false;
+}
+
 
       return true;
     });
-  }, [initialData, filters, globalSearch]);
+  }, [data, appliedFilters, activeTab, loggedInUser]);
 
-  return { filters, globalSearch, setGlobalSearch, handleFilterChange, filteredData, setFilters };
+  return {
+    filters,
+    setFilters,
+    applyFilters,
+    resetFilters,
+    filteredData,
+    activeTab,
+    setActiveTab,
+  };
 };

@@ -2,14 +2,14 @@ import React from "react";
 
 export default function TableHeader() {
   return (
-    <thead className="bg-blue-600 text-gray-600 text-left sticky top-0 z-10">
+    <thead className="bg-blue-600 text-gray-400 text-left sticky top-0 z-10">
 
       <tr className="bg-blue-600 text-white text-left">
         <th className="p-3  whitespace-nowrap">Sl No</th>
         <th className="p-3 whitespace-nowrap">Block</th>
-        <th className="p-3 whitespace-nowrap">GP</th>
+        {/* <th className="p-3 whitespace-nowrap">GP</th> */}
         <th className="p-3 whitespace-nowrap">Village</th>
-        <th className="p-3 whitespace-nowrap">Ward No</th>
+        {/* <th className="p-3 whitespace-nowrap">Ward No</th> */}
         <th className="p-3 whitespace-nowrap">Name</th>
         <th className="p-3 whitespace-nowrap">Father / Spouse Name</th>
         <th className="p-3 whitespace-nowrap">Contact</th>
