@@ -9,14 +9,19 @@ export default function StatsCard({ label, value, icon, color = "blue" }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl p-5 flex items-center gap-4
+    <div
+      className="bg-white rounded-2xl p-5 flex items-center gap-4
       shadow-sm ring-1 ring-gray-100
       hover:shadow-lg hover:-translate-y-0.5
       transition-all duration-300"
     >
       {/* Icon */}
       <div
-        className={`p-3 rounded-xl flex items-center justify-center ring-4 ${colors[color]}`}
+        className={`  grid 
+  grid-cols-1 
+  sm:grid-cols-2 
+  lg:grid-cols-1 
+  gap-4 p-2 rounded-xl flex items-center justify-center ring-4 ${colors[color]}`}
       >
         {icon}
       </div>
@@ -26,9 +31,7 @@ export default function StatsCard({ label, value, icon, color = "blue" }) {
         <p className="text-sm font-medium text-gray-500 tracking-wide">
           {label}
         </p>
-        <p className="text-3xl font-bold text-gray-900">
-          {value}
-        </p>
+        <p className="text-3xl font-bold text-gray-900">{value}</p>
       </div>
     </div>
   );

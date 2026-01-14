@@ -1,41 +1,94 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-//  import sampleData from "./data/sampleData";  
-import DataTable from "./components/table/DataTable";
+import { BrowserRouter,Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
+// import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
+import AddAgent from "./pages/AddAgent";
+import UserList from "./pages/UserList";
+import UserDetails from "./pages/UserDetails";
+import MainLayout from "./MainLayout";
+import GrievanceDetails from "./pages/GrievanceDetails";
+import EditGrievance from "./pages/EditGrievance";
+//  import PrivateRoute from "./components/PrivateRoute";
 
-import "./App.css";
 
-// Private Route Wrapper
+// simple auth guard
 const PrivateRoute = ({ children }) => {
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
-  return isLoggedIn ? children : <Navigate to="/login" />;
+  const token = localStorage.getItem("token");
+  console.log(token)
+  return token ? children : <Navigate to="/login" />;
 };
+
 
 export default function App() {
   return (
-    <Routes>
+    <BrowserRouter>
+      <Routes>
+        {/* Public */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/grievance/:id" element={<GrievanceDetails />} />
+        <Route path="/grievance/edit/:id" element={<EditGrievance />} />
 
-      {/* Login */}
-      <Route path="/login" element={<Login />} />
+        {/* <Route path="/signup" element={<Signup />} /> */}
 
-      {/* Register */}
-      <Route path="/register" element={<Register />} />
+        {/* Protected Layout */}
+        <Route element={<MainLayout />}>
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
 
-      {/* ✅ Home now shows Dashboard */}
-      <Route 
-        path="/home" 
-        element={
-          <PrivateRoute>
-            <Dashboard />
-          </PrivateRoute>
-        } 
-      />
+          <Route
+            path="/AddAgent"
+            element={
+              <PrivateRoute role="admin">
+                <AddAgent />
+              </PrivateRoute>
+            }
+          />
 
-      {/* Default redirect */}
-      <Route path="*" element={<Navigate to="/login" />} />
+          <Route
+            path="/userdetails"
+            element={
+              <PrivateRoute role="admin">
+                <UserList />
+              </PrivateRoute>
+            }
+          />
 
-    </Routes>
+          <Route
+            path="/profile/:id"
+            element={
+              <PrivateRoute>
+                <UserDetails />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/grievances/:id"
+            element={
+              <PrivateRoute>
+                <GrievanceDetails />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/grievances/:id"
+            element={
+              <PrivateRoute>
+                <EditGrievance />
+              </PrivateRoute>
+            }
+          />
+        </Route>
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
+

@@ -1,33 +1,76 @@
-import React, { useState,useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import StatsCard from "../components/StatsCard";
 import GrievanceTable from "../components/GrievanceTable";
-import { stats, grievances } from "../data/dashboardData";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import {
-  FiInbox,
-  FiClock,
-  FiCheckCircle,
-  FiUsers,
-} from "react-icons/fi";
+import { FiInbox, FiClock, FiCheckCircle, FiUsers } from "react-icons/fi";
 import { useTableFilter } from "../hooks/useTableFilter";
-
+import { getDashboardStats } from "../api/userService";
 
 
 
 export default function Dashboard() {
   const [query, setQuery] = useState("");
-  const [tab, setTab] = useState("All");
- const blocks = useMemo(() => {
+  const [tab, setTab] = useState("ALL");
+const [stats, setStats] = useState({
+  totalGrievances: 0,
+  pending: 0,
+  completed: 0,
+  activeAgents: 0,
+});
+
+  const [grievances, setGrievances] = useState([]);
+
+ useEffect(() => {
+  loadDashboard();
+}, []);
+
+const loadDashboard = async () => {
+  try {
+    const data = await getDashboardStats();
+
+    setStats({
+      totalGrievances: data.totalGrievances,
+      pending: data.grievanceStatusCounts?.PENDING || 0,
+      completed: data.grievanceStatusCounts?.COMPLETED || 0,
+      activeAgents: data.totalUsers || 0,
+    });
+
+    // 👇 Map recentActivity to table structure
+   const grievanceList = (data.recentActivity || []).map((g) => ({
+     id: g.grievanceId,
+     name: g.name,
+     subName: g.contact,
+     location: g.address,
+     topic: g.topic, // ✅ fixed
+     block: g.block,
+     date: g.createdDate, // or g.date if exists
+     status: g.status,
+     agent: g.agentName || "Unassigned",
+   }));
+
+
+    setGrievances(grievanceList);
+  } catch (error) {
+    console.error("Dashboard load error:", error);
+  }
+};
+
+
+
+  const blocks = useMemo(() => {
+  if (!Array.isArray(grievances)) return [];
   return [...new Set(grievances.map((g) => g.block).filter(Boolean))].sort();
 }, [grievances]);
 
+const searchedData = Array.isArray(grievances)
+  ? grievances.filter((g) =>
+      (g.name + g.subName + g.topic + g.location)
+        .toLowerCase()
+        .includes(query.toLowerCase())
+    )
+  : [];
 
-  const searchedData = grievances.filter((g) =>
-    (g.name + g.subName + g.topic + g.location)
-      .toLowerCase()
-      .includes(query.toLowerCase())
-  );
 
   const {
     filters,
@@ -36,172 +79,178 @@ export default function Dashboard() {
     resetFilters,
     filteredData,
   } = useTableFilter(searchedData);
+
   return (
-    <div className="flex">
-      <Sidebar />
+    <div className="flex min-h-screen bg-gray-100 p-3 sm:p-4 md:p-6 lg:p-8">
+      {/* <Sidebar /> */}
 
       <main className="flex-1 p-8 bg-gray-100 min-h-screen">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-3xl font-bold text-black">Grievance Management Dashboard</h2>
+          <h2 className="text-3xl font-bold text-black">
+            Grievance Management Dashboard
+          </h2>
 
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search grievances, agents..."
-                className="w-80 pl-10 pr-4 py-2 rounded-lg border bg-white text-gray-400"
-              />
-              <MagnifyingGlassIcon className="w-5 h-5 text-gray-400 absolute left-3 top-2.5" />
-            </div>
+          <div className="relative">
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search grievances, agents..."
+              className="w-80 pl-10 pr-4 py-2 rounded-lg border bg-white text-gray-400"
+            />
+            <MagnifyingGlassIcon className="w-5 h-5 text-gray-400 absolute left-3 top-2.5" />
           </div>
         </div>
 
         {/* Stats */}
-       <div className="grid grid-cols-4 gap-4 mb-6">
-  <StatsCard
-    label="Total Grievances"
-    value={stats.total}
-    icon={<FiInbox className="text-yellow-600 text-2xl" />}
-  />
+        <div className="grid grid-cols-4 gap-4 mb-6">
+          <StatsCard
+            label="Total Grievances"
+            value={stats.totalGrievances}
+            icon={<FiInbox className="text-yellow-600 text-2xl" />}
+          />
+          <StatsCard
+            label="Pending"
+            value={stats.pending}
+            icon={<FiClock className="text-blue-600 text-2xl" />}
+          />
+          <StatsCard
+            label="Completed"
+            value={stats.completed}
+            icon={<FiCheckCircle className="text-green-600 text-2xl" />}
+          />
 
-  <StatsCard
-    label="Pending"
-    value={stats.pending}
-    icon={<FiClock className="text-blue-600 text-2xl" />}
-  />
-
-  <StatsCard
-    label="Completed"
-    value={stats.completed}
-    icon={<FiCheckCircle className="text-green-600 text-2xl" />}
-  />
-
-  <StatsCard
-    label="Active Agents"
-    value={stats.agents}
-    icon={<FiUsers className="text-pink-500 text-2xl" />}
-  />
-</div>
-
+          <StatsCard
+            label="Active Agents"
+            value={stats.activeAgents}
+            icon={<FiUsers className="text-pink-500 text-2xl" />}
+          />
+        </div>
+        
         {/* Tabs + Filter panel */}
         <div className="bg-white rounded-xl shadow p-4 mb-6">
-          <div className="flex items-center gap-6 border-b pb-4 mb-4">
-         <button onClick={() => setActiveTab("ALL")}>All Grievances</button>
-<button onClick={() => setActiveTab("RECENT")}>Recent</button>
-<button onClick={() => setActiveTab("HIGH_PRIORITY")}>High Priority</button>
-<button onClick={() => setActiveTab("ASSIGNED")}>Assigned to Me</button>
+          <div className="flex items-center gap-6 pb-4 mb-4">
+            <button
+              onClick={() => setTab("ALL")}
+              className="relative pb-2 text-sm font-medium text-gray-600"
+            >
+              All Grievances
+              <span
+                className={`absolute left-0 -bottom-1 h-[2px] w-full bg-blue-600 transition-all ${
+                  tab === "ALL" ? "scale-x-100" : "scale-x-0"
+                }`}
+              />
+            </button>
 
+            <button
+              onClick={() => setTab("RECENT")}
+              className="relative pb-2 text-sm font-medium text-gray-600"
+            >
+              Recent
+              <span
+                className={`absolute left-0 -bottom-1 h-[2px] w-full bg-blue-600 transition-all ${
+                  tab === "RECENT" ? "scale-x-100" : "scale-x-0"
+                }`}
+              />
+            </button>
+
+            <button
+              onClick={() => setTab("ASSIGNED")}
+              className="relative pb-2 text-sm font-medium text-gray-600"
+            >
+              Assigned to Me
+              <span
+                className={`absolute left-0 -bottom-1 h-[2px] w-full bg-blue-600 transition-all ${
+                  tab === "ASSIGNED" ? "scale-x-100" : "scale-x-0"
+                }`}
+              />
+            </button>
           </div>
 
-          {/* Filters row */}
-<div className="bg-white rounded-xl border shadow-sm p-5">
-  <div className="grid grid-cols-6 gap-6 items-end">
+          {/* Filters */}
+          <div className="bg-white rounded-xl shadow-sm p-5">
+            <div className="grid grid-cols-6 gap-6 items-end">
+              <div className="flex flex-col gap-1"> 
+                <label className="text-xs font-semibold text-gray-600">
+                  Status
+                </label>
+                <select
+                  value={filters.status}
+                  onChange={(e) =>
+                    setFilters({ ...filters, status: e.target.value })
+                  }
+                  className="h-10 rounded-md border border-gray-300 px-3 text-sm"
+                >
+                  <option value="">All Status</option>
+                  <option value="PENDING">Pending</option>
+                  <option value="COMPLETED">Completed</option>
+                </select>
+              </div>
 
-    {/* Status */}
-    <div className="flex flex-col gap-1">
-      <label className="text-xs font-semibold text-gray-600">
-        Status
-      </label>
-      <select
-        value={filters.status}
-        onChange={(e) =>
-          setFilters({ ...filters, status: e.target.value })
-        }
-        className="h-10 rounded-md border border-gray-300 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        <option value="">All Status</option>
-        <option value="Pending">Pending</option>
-        <option value="Completed">Completed</option>
-      </select>
-    </div>
+             <div className="flex flex-col gap-1"> 
+              <label className="text-xs font-semibold text-gray-600">
+                  Block
+                </label>
+                <select
+                  value={filters.block}
+                  onChange={(e) =>
+                    setFilters({ ...filters, block: e.target.value })
+                  }
+                  className="h-10 rounded-md border border-gray-300 px-3 text-sm"
+                >
+                  <option value="">All Blocks</option>
+                  {blocks.map((block) => (
+                    <option key={block} value={block}>
+                      {block}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-    {/* Block */}
-    <div className="flex flex-col gap-1">
-      <label className="text-xs font-semibold text-gray-600">
-        Block
-      </label>
-<select
-  value={filters.block}
-  onChange={(e) =>
-    setFilters({ ...filters, block: e.target.value })
-  }
-  className="h-10 rounded-md border border-gray-300 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
->
-  <option value="">All Blocks</option>
+             <div className="flex flex-col gap-1"> 
+              <label className="text-xs font-semibold text-gray-600">
+                  Ward No.
+                </label>
+                <input
+                  value={filters.ward}
+                  onChange={(e) =>
+                    setFilters({ ...filters, ward: e.target.value })
+                  }
+                  placeholder="e.g. 12"
+                  className="h-10 rounded-md border border-gray-300 px-3 text-sm"
+                />
+              </div>
 
-  {blocks.map((block) => (
-    <option key={block} value={block}>
-      {block}
-    </option>
-  ))}
-</select>
+             <div className="flex flex-col gap-1"> 
+              <label className="text-xs font-semibold text-gray-600">
+                  Date
+                </label>
+                <input
+                  type="date"
+                  value={filters.dateFrom}
+                  onChange={(e) =>
+                    setFilters({ ...filters, dateFrom: e.target.value })
+                  }
+                  className="h-10 rounded-md border border-gray-300 px-3 text-sm"
+                />
+              </div>
 
-    </div>
-
-    {/* Ward */}
-    <div className="flex flex-col gap-1">
-      <label className="text-xs font-semibold text-gray-600">
-        Ward No.
-      </label>
-      <input
-        value={filters.ward}
-        onChange={(e) =>
-          setFilters({ ...filters, ward: e.target.value })
-        }
-        placeholder="e.g. 12"
-        className="h-10 rounded-md border border-gray-300 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-    </div>
-
-    {/* Date Range */}
-    <div className="flex flex-col gap-1">
-      <label className="text-xs font-semibold text-gray-600">
-        Date Range
-      </label>
-      <div className="flex gap-2">
-        <input
-          type="date"
-          value={filters.dateFrom}
-          onChange={(e) =>
-            setFilters({ ...filters, dateFrom: e.target.value })
-          }
-          className="h-10 w-full rounded-md border border-gray-300 px-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {/* <input
-          type="date"
-          value={filters.dateTo}
-          onChange={(e) =>
-            setFilters({ ...filters, dateTo: e.target.value })
-          }
-          className="h-10 w-full rounded-md border border-gray-300 px-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        /> */}
-      </div>
-    </div>
-
-    {/* Buttons */}
-    <div className="flex gap-3 justify-end col-span-2">
-      <button
-        onClick={resetFilters}
-        className="h-10 px-4 rounded-md border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
-      >
-        Reset
-      </button>
-
-      <button
-        onClick={applyFilters}
-        className="h-10 px-5 rounded-md bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 transition"
-      >
-        Apply Filters
-      </button>
-    </div>
-
-  </div>
-</div>
-
-
-
+              <div className="flex gap-3 justify-end col-span-2">
+                <button
+                  onClick={resetFilters}
+                  className="h-10 px-4 border rounded-md text-sm"
+                >
+                  Reset
+                </button>
+                <button
+                  onClick={applyFilters}
+                  className="h-10 px-5 bg-blue-600 text-white rounded-md text-sm"
+                >
+                  Apply Filters
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Table */}
