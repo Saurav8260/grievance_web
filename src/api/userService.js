@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8080/api";
+const BASE_URL = "https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod";
 
 // ================= LOGIN =================
 export const loginUser = async (payload) => {
@@ -7,7 +7,7 @@ export const loginUser = async (payload) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(payload), // 
+    body: JSON.stringify(payload),
   });
 
   const data = await response.json();
@@ -20,11 +20,17 @@ export const loginUser = async (payload) => {
 };
 
 
+
 // ================= CREATE USER =================
 export const createUser = async (payload) => {
-  const response = await fetch("http://localhost:8080/api/auth/signup", {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${BASE_URL}/users/agent-signup`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
     body: JSON.stringify(payload),
   });
 

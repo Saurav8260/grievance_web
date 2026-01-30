@@ -1,148 +1,3 @@
-// import { useEffect, useState } from "react";
-// import { getAllUsers, patchUserStatus } from "../api/userService";
-
-// export default function UserList() {
-//   const [users, setUsers] = useState([]);
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     fetchUsers();
-//   }, []);
-
-//   const fetchUsers = async () => {
-//     try {
-//       const token = localStorage.getItem("token");
-
-//       if (!token) {
-//         throw new Error("No token found. Please login again.");
-//       }
-
-//       const data = await getAllUsers(token);
-//       setUsers(data);
-//     } catch (err) {
-//       console.error("Fetch users error:", err);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   if (loading)
-//     return (
-//       <div className="flex justify-center items-center h-72">
-//         <div className="relative">
-//           <div className="h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-//         </div>
-//       </div>
-//     );
-
-//   return (
-//     <div className="p-8">
-//       {/* Header */}
-//       <div className="flex items-center justify-between mb-6">
-//         <div>
-//           <h1 className="text-3xl font-extrabold text-gray-800">
-//             User Management
-//           </h1>
-//           <p className="text-sm text-gray-500 mt-1">
-//             Monitor, manage, and control all platform users
-//           </p>
-//         </div>
-//       </div>
-
-//       {/* Table Card */}
-//       <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-//         <div className="overflow-x-auto">
-//           <table className="w-full text-sm">
-//             <thead className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-//               <tr>
-//                 <th className="px-6 py-4 text-left font-semibold tracking-wide">
-//                   Name
-//                 </th>
-//                 <th className="px-6 py-4 text-left font-semibold tracking-wide">
-//                   Contact
-//                 </th>
-//                 <th className="px-6 py-4 text-left font-semibold tracking-wide">
-//                   Role
-//                 </th>
-//                 <th className="px-6 py-4 text-left font-semibold tracking-wide">
-//                   Status
-//                 </th>
-//               </tr>
-//             </thead>
-
-//             <tbody className="divide-y divide-gray-200">
-//               {users.length === 0 ? (
-//                 <tr>
-//                   <td colSpan="4" className="text-center py-10 text-gray-500">
-//                     No users found
-//                   </td>
-//                 </tr>
-//               ) : (
-//                 users.map((u) => (
-//                   <tr
-//                     key={u.id}
-//                     className="hover:bg-blue-50 transition-colors duration-200"
-//                   >
-//                     <td className="px-6 py-4 font-medium text-gray-800">
-//                       {u.name}
-//                     </td>
-//                     <td className="px-6 py-4 text-gray-600">{u.contact}</td>
-//                     <td className="px-6 py-4">
-//                       <span className="px-3 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-700">
-//                         {u.role}
-//                       </span>
-//                     </td>
-//                     <td className="px-6 py-4">
-//                       {(() => {
-//                         const isActive =
-//                           u.is_active === true ||
-//                           u.is_active === 1 ||
-//                           u.status === true ||
-//                           u.active === 1 ||
-//                           u.isActive === true;
-
-//                         return (
-//                           <button
-//                             onClick={async () => {
-//                               try {
-//                                 const newStatus = !isActive;
-//                                 await patchUserStatus(u.id, newStatus);
-
-//                                 setUsers((prev) =>
-//                                   prev.map((user) =>
-//                                     user.id === u.id
-//                                       ? { ...user, isActive: newStatus }
-//                                       : user
-//                                   )
-//                                 );
-//                               } catch (err) {
-//                                 alert("Failed to update status");
-//                               }
-//                             }}
-//                             className={`px-3 py-1 rounded-full text-xs font-bold transition ${
-//                               isActive
-//                                 ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200"
-//                                 : "bg-rose-100 text-rose-700 hover:bg-rose-200"
-//                             }`}
-//                           >
-//                             {isActive ? "Active" : "Inactive"}
-//                           </button>
-//                         );
-//                       })()}
-//                     </td>
-//                   </tr>
-//                 ))
-//               )}
-//             </tbody>
-//           </table>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
 import { useEffect, useState } from "react";
 import { getAllUsers, patchUserStatus, createUser } from "../api/userService";
 
@@ -150,14 +5,15 @@ export default function UserList() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [confirmUser, setConfirmUser] = useState(null);
 
   const [form, setForm] = useState({
-    name: "",
-    email: "",
-    contact: "",
+    // name: "",
+    // contact: "",
+    // email: "",
     newPassword: "",
-    role: "AGENT",
-    active: true,
+    // role: "AGENT",
+    // active: true,
   });
 
   useEffect(() => {
@@ -180,17 +36,31 @@ export default function UserList() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     await createUser(form);
+  //     alert("Agent created successfully");
+  //     setShowModal(false);
+  //     fetchUsers();
+  //   } catch (err) {
+  //     alert(err.message || "Failed to create user");
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await createUser(form);
-      alert("Agent created successfully");
-      setShowModal(false);
-      fetchUsers();
-    } catch (err) {
-      alert(err.message || "Failed to create user");
-    }
-  };
+  e.preventDefault();
+  try {
+    await createUser({ newPassword: form.newPassword });
+    alert("Agent created successfully");
+    setShowModal(false);
+    fetchUsers();
+  } catch (err) {
+    alert(err.message || "Failed to create agent");
+  }
+};
+
+
 
   if (loading)
     return (
@@ -201,10 +71,11 @@ export default function UserList() {
 
   return (
     <div className="p-8">
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-extrabold text-gray-800">User Management</h1>
+          <h1 className="text-3xl font-extrabold text-gray-800">
+            User Management
+          </h1>
           <p className="text-sm text-gray-500 mt-1">
             Monitor, manage, and control all platform users
           </p>
@@ -218,7 +89,6 @@ export default function UserList() {
         </button>
       </div>
 
-      {/* Table */}
       <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-[900px] w-full text-sm">
@@ -239,19 +109,7 @@ export default function UserList() {
                   <td className="px-6 py-4">{u.role}</td>
                   <td className="px-6 py-4">
                     <button
-                      onClick={async () => {
-                        try {
-                          const newStatus = !u.isActive;
-                          await patchUserStatus(u.id, newStatus);
-                          setUsers((prev) =>
-                            prev.map((user) =>
-                              user.id === u.id ? { ...user, isActive: newStatus } : user
-                            )
-                          );
-                        } catch {
-                          alert("Failed to update status");
-                        }
-                      }}
+                      onClick={() => setConfirmUser(u)}
                       className={`px-3 py-1 rounded-full text-xs font-bold ${
                         u.isActive
                           ? "bg-emerald-100 text-emerald-700"
@@ -268,7 +126,53 @@ export default function UserList() {
         </div>
       </div>
 
-      {/* Add Agent Modal (Your form, merged) */}
+      {confirmUser && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-sm">
+            <h3 className="text-lg font-semibold mb-2">
+              {confirmUser.isActive ? "Deactivate User" : "Activate User"}
+            </h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Are you sure you want to{" "}
+              {confirmUser.isActive ? "deactivate" : "activate"}{" "}
+              <span className="font-semibold">{confirmUser.name}</span>?
+            </p>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setConfirmUser(null)}
+                className="px-4 py-2 border rounded"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  try {
+                    const newStatus = !confirmUser.isActive;
+                    await patchUserStatus(confirmUser.id, newStatus);
+                    setUsers((prev) =>
+                      prev.map((user) =>
+                        user.id === confirmUser.id
+                          ? { ...user, isActive: newStatus }
+                          : user,
+                      ),
+                    );
+                    setConfirmUser(null);
+                  } catch {
+                    alert("Failed to update status");
+                  }
+                }}
+                className={`px-4 py-2 rounded text-white ${
+                  confirmUser.isActive ? "bg-red-600" : "bg-green-600"
+                }`}
+              >
+                {confirmUser.isActive ? "Deactivate" : "Activate"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {showModal && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <form
@@ -280,22 +184,20 @@ export default function UserList() {
             </h2>
 
             <div className="space-y-4">
-              <input
+              {/* <input
                 name="name"
                 placeholder="Full Name"
                 onChange={handleChange}
                 className="w-full px-4 py-2 border rounded"
                 required
-              />
-
+              />{" "}
               <input
                 name="contact"
                 placeholder="Contact Number"
                 onChange={handleChange}
                 className="w-full px-4 py-2 border rounded"
                 required
-              />
-
+              />{" "}
               <input
                 name="email"
                 type="email"
@@ -303,18 +205,18 @@ export default function UserList() {
                 onChange={handleChange}
                 className="w-full px-4 py-2 border rounded"
                 required
-              />
+              /> */}
+<input
+  type="password"
+  placeholder="Set Agent Password"
+  value={form.newPassword}
+  onChange={(e) => setForm({ newPassword: e.target.value })}
+  className="w-full px-4 py-2 border rounded"
+  required
+/>
 
-              <input
-                name="newPassword"
-                type="password"
-                placeholder="Password"
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded"
-                required
-              />
 
-              <select
+              {/* <select
                 name="role"
                 value={form.role}
                 onChange={handleChange}
@@ -323,7 +225,7 @@ export default function UserList() {
                 <option value="ADMIN">Admin</option>
                 <option value="AGENT">Agent</option>
                 <option value="USER">User</option>
-              </select>
+              </select> */}
             </div>
 
             <div className="flex justify-end gap-3 mt-5">

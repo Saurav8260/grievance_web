@@ -6,7 +6,7 @@ export default function Login() {
   const [form, setForm] = useState({
     name: "",
     password: "",
-    role: "",
+    role: "admin",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -25,13 +25,18 @@ export default function Login() {
     try {
       setLoading(true);
 
-      const res = await loginUser(form);
+      // const res = await loginUser(form );
+      const res = await loginUser({
+        ...form,
+        role: "ADMIN",
+      });
+
 
       console.log(res);
       localStorage.setItem("token", res.token);
       localStorage.setItem("user", JSON.stringify(res.name));
       localStorage.setItem("role", res.role);
-      localStorage.setItem("userId", res.userId);
+      // localStorage.setItem("userId", res.userId);
 
       // Force user to enter name before dashboard
       const savedName = localStorage.getItem("dashboard_name");

@@ -66,6 +66,14 @@ export default function EditGrievance() {
   return (
     <div className="max-w-6xl mx-auto p-6">
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+         <div className="p-4 border-b bg-gray-50">
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 text-sm font-medium text-blue-600 hover:underline"
+          >
+            ← Back to Previous Page
+          </button>
+        </div>
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
           <h2 className="text-white text-lg font-semibold">
             Edit Grievance #{id}

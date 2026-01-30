@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import Pagination from "../components/Pagination";
 
+
 export default function AllGrievances() {
   const [grievances, setGrievances] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -69,7 +70,8 @@ export default function AllGrievances() {
       "Topic": g.topic,
       "Status": g.status,
       "Assigned Agent": g.agent,
-      "Created Date": new Date(g.date).toLocaleDateString(),
+      "Date": g.startDate,
+      "Date To": g.endDate,
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(formattedData);
@@ -93,7 +95,8 @@ export default function AllGrievances() {
   }
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen overflow-x-hidden">
+    <div className="p-6 bg-gray-100 min-h-screen max-w-screen-xl mx-auto">
+
       <h1 className="text-2xl font-bold text-gray-800 mb-4">
         All Grievance Details
       </h1>
@@ -147,8 +150,8 @@ export default function AllGrievances() {
             <div>
             <label className="text-xs font-semibold text-gray-600">Father / Spouse</label>
           <input
-            value={filters.father || ""}
-            onChange={(e) => setFilters({ ...filters, father: e.target.value })}
+            value={filters.fatherSpouseName || ""}
+            onChange={(e) => setFilters({ ...filters, fatherSpouseName: e.target.value })}
             className="h-10 w-full rounded-md border px-3 text-sm"
             placeholder="Father / Spouse"
           />
@@ -158,9 +161,9 @@ export default function AllGrievances() {
             <label className="text-xs font-semibold text-gray-600">Date From</label>
           <input
             type="date"
-            value={filters.dateFrom || ""}
+            value={filters.startDate || ""}
             onChange={(e) =>
-              setFilters({ ...filters, dateFrom: e.target.value })
+              setFilters({ ...filters, startDate: e.target.value })
             }
             className="h-10 w-full rounded-md border px-3 text-sm"
           />
@@ -170,8 +173,8 @@ export default function AllGrievances() {
             <label className="text-xs font-semibold text-gray-600">Date To</label>
           <input
             type="date"
-            value={filters.dateTo || ""}
-            onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })}
+            value={filters.endDate || ""}
+            onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
             className="h-10 w-full rounded-md border px-3 text-sm"
           />
           </div>

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getGrievanceById } from "../api/userService";
 
 export default function GrievanceDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [grievance, setGrievance] = useState(null);
 
   useEffect(() => {
@@ -21,6 +22,16 @@ export default function GrievanceDetails() {
   return (
     <div className="max-w-6xl mx-auto p-6">
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+
+        {/* Back Button */}
+        <div className="p-4 border-b bg-gray-50">
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 text-sm font-medium text-blue-600 hover:underline"
+          >
+            ← Back to Previous Page
+          </button>
+        </div>
 
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
@@ -200,7 +211,6 @@ export default function GrievanceDetails() {
           Last updated automatically from central grievance system
         </div>
 
-        
       </div>
     </div>
   );

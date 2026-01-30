@@ -18,7 +18,7 @@ export default function AddGrievanceModal({ onClose, onSuccess }) {
     grievanceDetails: "",
     remark: "",
     createddate: new Date().toISOString().split("T")[0],
-    collectedBy: loggedInName,
+    agentName: loggedInName,
     attachment: null,
   });
 
@@ -87,7 +87,7 @@ export default function AddGrievanceModal({ onClose, onSuccess }) {
         grievanceDetails: form.grievanceDetails,
         remark: form.remark,
         date: form.createddate,
-        collectedBy: form.collectedBy,
+        agentName: form.agentName,
       };
 
       await createGrievance(payload);
@@ -160,11 +160,11 @@ export default function AddGrievanceModal({ onClose, onSuccess }) {
         <Input label="Grievance Details" name="grievanceDetails" value={form.grievanceDetails} onChange={handleChange} />
         <Input label="Remark" name="remark" value={form.remark} onChange={handleChange} />
 
-        {/* Auto-filled Collected By */}
+        {/* Auto-filled Agent Name */}
         <Input
-          label="Collected By"
-          name="collectedBy"
-          value={form.collectedBy}
+          label="Agent Name"
+          name="agentName"
+          value={form.agentName}
           readOnly
         />
 
