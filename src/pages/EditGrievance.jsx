@@ -1,5 +1,5 @@
 
-
+//ediable grievance page for admin/agent to update grievance details
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getGrievanceById, updateGrievance } from "../api/userService";
