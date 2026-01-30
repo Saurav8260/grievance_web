@@ -1,4 +1,4 @@
-const BASE_URL = "https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod";
+const BASE_URL = "http://localhost:8080/api";
 
 // ================= LOGIN =================
 export const loginUser = async (payload) => {
@@ -250,7 +250,7 @@ export const getGrievanceFilter = async (query) => {
 export const createGrievance = async (data) => {
   const token = localStorage.getItem("token");
 
-  const res = await fetch("http://localhost:8080/api/grievances", {
+  const res = await fetch(`${BASE_URL}/grievances`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
