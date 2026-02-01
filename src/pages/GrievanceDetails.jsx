@@ -22,7 +22,6 @@ export default function GrievanceDetails() {
   return (
     <div className="max-w-6xl mx-auto p-6">
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-
         {/* Back Button */}
         <div className="p-4 border-b bg-gray-50">
           <button
@@ -35,12 +34,13 @@ export default function GrievanceDetails() {
 
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
-          <h2 className="text-white text-lg font-semibold">Grievance Details</h2>
+          <h2 className="text-white text-lg font-semibold">
+            Grievance Details
+          </h2>
         </div>
 
         {/* Main Info */}
         <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-
           <div>
             <p className="text-gray-500">Citizen Name</p>
             <p className="font-semibold">{grievance.name}</p>
@@ -96,8 +96,15 @@ export default function GrievanceDetails() {
           <div className="md:col-span-2">
             <p className="text-gray-500">Topics</p>
             <p className="font-medium">
-              {grievance.topic1}, {grievance.topic2}, {grievance.topic3},{" "}
-              {grievance.topic4}, {grievance.topic5}
+              {[
+                grievance.topic1,
+                grievance.topic2,
+                grievance.topic3,
+                grievance.topic4,
+                grievance.topic5,
+              ]
+                .filter(Boolean)
+                .join(", ")}
             </p>
           </div>
 
@@ -141,7 +148,6 @@ export default function GrievanceDetails() {
             <p className="text-gray-500">Admin Remarks</p>
             <p className="font-medium">{grievance.adminRemarks}</p>
           </div>
-
         </div>
 
         {/* Collected By */}
@@ -210,7 +216,6 @@ export default function GrievanceDetails() {
         <div className="bg-gray-50 px-6 py-3 text-right text-xs text-gray-500">
           Last updated automatically from central grievance system
         </div>
-
       </div>
     </div>
   );

@@ -405,6 +405,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getGrievanceById, updateGrievance, uploadAttachments } from "../api/userService";
 
+
 export default function EditGrievance() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -430,14 +431,18 @@ export default function EditGrievance() {
     status: "",
     adminDate: "",
     adminRemarks: "",
-    attachments: []
+    attachments: [],       
+    // attachments: [],    
   });
 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getGrievanceById(id).then((data) => {
-      setForm(data);
+      setForm({
+        ...data,
+        attachments: [],
+      });
       setLoading(false);
     });
   }, [id]);
@@ -447,38 +452,51 @@ export default function EditGrievance() {
   };
 
   const handleFileChange = (e) => {
-    setForm({ ...form, attachments: Array.from(e.target.files) });
+    setForm({
+      ...form,
+      attachments: Array.from(e.target.files),
+    });
   };
 
-  // ✅ ONLY FIX APPLIED HERE
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const { attachments, ...formWithoutFiles } = form;
 
-      // Update grievance without files
+      // 1️⃣ Update grievance (without files)
       await updateGrievance(id, formWithoutFiles);
 
-      // Upload attachments separately
+      // 2️⃣ Upload new attachments
+
+      
       if (attachments && attachments.length > 0) {
         await uploadAttachments(attachments, id);
       }
 
+      // 3️⃣ Reload updated grievance to show new attachments
+      const updatedData = await getGrievanceById(id);
+
+      setForm({
+        ...updatedData,
+        attachments: [],
+      });
+
       alert("Grievance updated successfully");
-      navigate("/dashboard");
 
     } catch (error) {
       alert(error.message);
     }
   };
 
-  if (loading)
+  if (loading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center text-gray-500">
         Loading...
       </div>
     );
+  }
+
 
   return (
     <div className="max-w-6xl mx-auto p-6">
@@ -714,7 +732,7 @@ export default function EditGrievance() {
           
 
           {/* Attachments */}
-          <div className="border-t px-6 py-4">
+         <div className="border-t px-6 py-4">
             <h3 className="text-sm font-semibold text-gray-700 mb-3">
               Attachments
             </h3>
@@ -764,7 +782,6 @@ export default function EditGrievance() {
             </div>
           </div>
 
-          {/* Actions */}
           <div className="flex justify-end gap-3 pt-4 border-t">
             <button
               type="button"
@@ -780,8 +797,7 @@ export default function EditGrievance() {
               Update Grievance
             </button>
           </div>
-
-        </form>
+          </form>
       </div>
     </div>
   );

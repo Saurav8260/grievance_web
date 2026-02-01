@@ -1,4 +1,4 @@
-const BASE_URL = "https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod";
+const BASE_URL = "http://localhost:8080/api";
 // https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod
 
 // ================= LOGIN =================
@@ -268,30 +268,78 @@ export const createGrievance = async (data) => {
 };
 
 // ================= UPLOAD ATTACHMENTS =================
-export const uploadAttachments = async (files, grievanceId, fileType = "OTHER") => {
+export const uploadAttachments = async (files, grievanceId) => {
   const token = localStorage.getItem("token");
 
-  const formData = new FormData();
+  const requestBody = {
+    grievanceId,
+    files: files.map((file) => ({
+      fileName: file.name,
+      contentType: file.type,
+      fileSize: file.size,
+      fileType: "OTHER",
+    })),
+  };
 
-  files.forEach((file) => {
-    formData.append("files", file);
-  });
+  // 1️⃣ Get presigned URLs
+  const presignResponse = await fetch(
+    `${BASE_URL}/attachments/presigned-urls`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(requestBody),
+    }
+  );
 
-  formData.append("grievanceId", grievanceId);
-  formData.append("fileType", fileType);
-
-  const response = await fetch(`${BASE_URL}/attachments/upload`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,   // VERY IMPORTANT
-    },
-    body: formData,
-  });
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(error || "Upload failed");
+  if (!presignResponse.ok) {
+    throw new Error("Failed to get presigned URLs");
   }
 
-  return response.json();
+  const presignData = await presignResponse.json();
+
+  // 2️⃣ Upload each file
+  for (let i = 0; i < presignData.uploads.length; i++) {
+    const uploadInfo = presignData.uploads[i];
+    const file = files[i];
+
+    // Upload to S3
+    const uploadResponse = await fetch(uploadInfo.presignedUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": file.type,
+      },
+      body: file,
+    });
+
+    if (!uploadResponse.ok) {
+      throw new Error("S3 Upload failed");
+    }
+
+    // Confirm upload
+    const confirmResponse = await fetch(
+      `${BASE_URL}/attachments/confirm?uploadId=${uploadInfo.uploadId}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!confirmResponse.ok) {
+      const text = await confirmResponse.text();
+      throw new Error("Confirm failed: " + text);
+    }
+
+    const confirmData = await confirmResponse.json();
+
+    if (!confirmData.uploaded) {
+      throw new Error("Upload not confirmed by backend");
+    }
+  }
+
+  return true;
 };

@@ -254,12 +254,14 @@ export default function AllGrievances() {
       </div>
 
       {/* Pagination */}
-      <Pagination
-        page={page}
-        totalPages={totalPages}
-        onPrev={() => setPage((p) => Math.max(p - 1, 0))}
-        onNext={() => setPage((p) => Math.min(p + 1, totalPages - 1))}
-      />
+      <div className="w-full mt-6">
+  <Pagination
+    page={page}
+    totalPages={totalPages}
+    onPrev={() => setPage((p) => Math.max(p - 1, 0))}
+    onNext={() => setPage((p) => Math.min(p + 1, totalPages - 1))}
+  />
+</div>
     </div>
   );
 }
