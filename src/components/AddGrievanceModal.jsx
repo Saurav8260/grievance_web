@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { createGrievance } from "../api/userService";
+import { createGrievance, uploadAttachments } from "../api/userService";
 import locationMaster from "../data/locationMaster.js";
 
 export default function AddGrievanceModal({ onClose, onSuccess }) {
@@ -77,23 +77,43 @@ export default function AddGrievanceModal({ onClose, onSuccess }) {
         villageSahi: form.villageSahi,
         wardNo: form.wardNo,
         address: form.address,
-
         topic1: form.topics[0] || "",
         topic2: form.topics[1] || "",
         topic3: form.topics[2] || "",
         topic4: form.topics[3] || "",
         topic5: form.topics[4] || "",
-
         grievanceDetails: form.grievanceDetails,
         remark: form.remark,
         date: form.createddate,
         agentName: form.agentName,
       };
 
-      await createGrievance(payload);
+      // 🔥 STEP 1: Create grievance
+      const created = await createGrievance(payload);
+
+      console.log("Created grievance response:", created);
+
+      // 🔥 STEP 2: Extract ID safely
+      const grievanceId =
+        created?.id ||
+        created?.grievanceId ||
+        created?.data?.id ||
+        created?.data?.grievanceId;
+
+      if (!grievanceId) {
+        throw new Error("Grievance ID not returned from backend");
+      }
+
+      // 🔥 STEP 3: Upload attachment if exists
+      if (form.attachment) {
+        await uploadAttachments([form.attachment], grievanceId);
+      }
+
       onSuccess();
       onClose();
+
     } catch (err) {
+      console.error("Add grievance error:", err);
       setError(err.message || "Failed to save grievance");
     } finally {
       setLoading(false);
@@ -123,10 +143,8 @@ export default function AddGrievanceModal({ onClose, onSuccess }) {
         <Input label="Father / Spouse" name="fatherSpouseName" value={form.fatherSpouseName} onChange={handleChange} />
         <Input label="Contact" name="contact" value={form.contact} onChange={handleChange} />
 
-        {/* Dynamic Topics */}
         <div className="mb-2">
           <label className="text-xs text-gray-600">Topics</label>
-
           {form.topics.map((topic, index) => (
             <div key={index} className="flex gap-2 mb-2">
               <input
@@ -135,7 +153,6 @@ export default function AddGrievanceModal({ onClose, onSuccess }) {
                 className="w-full border rounded-md px-3 py-2 text-sm"
                 placeholder={`Topic ${index + 1}`}
               />
-
               {form.topics.length > 1 && (
                 <button
                   type="button"
@@ -147,26 +164,14 @@ export default function AddGrievanceModal({ onClose, onSuccess }) {
               )}
             </div>
           ))}
-
-          <button
-            type="button"
-            onClick={addTopic}
-            className="text-sm text-blue-600 font-semibold"
-          >
+          <button type="button" onClick={addTopic} className="text-sm text-blue-600 font-semibold">
             + Add another topic
           </button>
         </div>
 
         <Input label="Grievance Details" name="grievanceDetails" value={form.grievanceDetails} onChange={handleChange} />
         <Input label="Remark" name="remark" value={form.remark} onChange={handleChange} />
-
-        {/* Auto-filled Agent Name */}
-        <Input
-          label="Agent Name"
-          name="agentName"
-          value={form.agentName}
-          readOnly
-        />
+        <Input label="Agent Name" name="agentName" value={form.agentName} readOnly />
 
         <div>
           <label className="text-xs text-gray-600">Attachment</label>

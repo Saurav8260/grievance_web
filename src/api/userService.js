@@ -1,4 +1,5 @@
-const BASE_URL = "https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod";
+const BASE_URL = "http://localhost:8080/api";
+// https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod
 
 // ================= LOGIN =================
 export const loginUser = async (payload) => {
@@ -61,15 +62,18 @@ export const getAllUsers = async () => {
   console.log("USERS DATA:", data);     
   return data;
 };
+
 // ================= GET USER BY ID =================
 
 export const getUserById = async (id) => {
+  console.log("idvalue",id)
   const token = localStorage.getItem("token");
 
   const res = await fetch(`${BASE_URL}/users/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+
   });
 
   console.log("Response from user id API:", res);
@@ -83,6 +87,7 @@ export const getUserById = async (id) => {
 };
 
 // ================= GET LOGGED-IN USER PROFILE =================
+
 export const getMyProfile = async (token) => {
   const response = await fetch(`${BASE_URL}/users/me`, {
     method: "GET",
@@ -260,4 +265,33 @@ export const createGrievance = async (data) => {
   });
 
   return res.json();
+};
+
+// ================= UPLOAD ATTACHMENTS =================
+export const uploadAttachments = async (files, grievanceId, fileType = "OTHER") => {
+  const token = localStorage.getItem("token");
+
+  const formData = new FormData();
+
+  files.forEach((file) => {
+    formData.append("files", file);
+  });
+
+  formData.append("grievanceId", grievanceId);
+  formData.append("fileType", fileType);
+
+  const response = await fetch(`${BASE_URL}/attachments/upload`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,   // VERY IMPORTANT
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || "Upload failed");
+  }
+
+  return response.json();
 };

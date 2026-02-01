@@ -34,21 +34,21 @@ export default function Login() {
 
       console.log(res);
       localStorage.setItem("token", res.token);
-      localStorage.setItem("user", JSON.stringify(res.name));
+      localStorage.setItem("id", JSON.stringify(res.userId));
       localStorage.setItem("role", res.role);
       // localStorage.setItem("userId", res.userId);
 
       // Force user to enter name before dashboard
-      const savedName = localStorage.getItem("dashboard_name");
-      if (!savedName) {
-        const name = prompt("Please enter your name to continue:");
-        if (!name || !name.trim()) {
-          setError("Name is required to enter dashboard");
-          setLoading(false);
-          return;
-        }
-        localStorage.setItem("dashboard_name", name);
-      }
+      // const savedName = localStorage.getItem("dashboard_name");
+      // if (!savedName) {
+      //   const name = prompt("Please enter your name to continue:");
+      //   if (!name || !name.trim()) {
+      //     setError("Name is required to enter dashboard");
+      //     setLoading(false);
+      //     return;
+      //   }
+      //   localStorage.setItem("dashboard_name", name);
+      // }
 
       navigate("/dashboard");
     } catch (err) {

@@ -9,6 +9,33 @@ import { getDashboardStats } from "../api/userService";
 export default function Dashboard() {
   const [openAddGrievance, setOpenAddGrievance] = useState(false);
     const [showNamePopup, setShowNamePopup] = useState(false);
+  
+
+  const [showNameModal, setShowNameModal] = useState(false);
+  const [dashboardName, setDashboardName] = useState("");
+
+  useEffect(() => {
+  const savedName = localStorage.getItem("dashboard_name");
+  if (!savedName) {
+    setShowNameModal(true);
+  }
+}, []);
+
+useEffect(() => {
+  const savedName = localStorage.getItem("dashboard_name");
+  if (!savedName) {
+    setShowNameModal(true);
+  }
+}, []);
+
+const handleSaveName = () => {
+  if (!dashboardName.trim()) return;
+
+  localStorage.setItem("dashboard_name", dashboardName);
+  setShowNameModal(false);
+};
+
+
 
   const [stats, setStats] = useState({
     totalGrievances: 0,
@@ -22,6 +49,8 @@ export default function Dashboard() {
   useEffect(() => {
     loadRecentGrievances();
   }, []);
+
+  
   useEffect(() => {
   const name = localStorage.getItem("dashboard_name");
 
@@ -31,6 +60,16 @@ export default function Dashboard() {
     setShowNamePopup(false);
   }
 }, []);
+
+
+useEffect(() => {
+  if (showNameModal) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "auto";
+  }
+}, [showNameModal]);
+
 
   const loadRecentGrievances = async () => {
     try {
@@ -139,6 +178,34 @@ export default function Dashboard() {
           />
         )}
       </div>
+      {showNameModal && (
+  <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div className="bg-white rounded-2xl shadow-2xl p-8 w-96 animate-fadeIn">
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">
+        Welcome 👋
+      </h2>
+      <p className="text-gray-500 text-sm mb-4">
+        Please enter your name to continue
+      </p>
+
+      <input
+        type="text"
+        placeholder="Enter your name"
+        value={dashboardName}
+        onChange={(e) => setDashboardName(e.target.value)}
+        className="w-full border border-gray-300 rounded-xl px-4 py-2 mb-4 focus:ring-2 focus:ring-blue-500 outline-none"
+      />
+
+      <button
+        onClick={handleSaveName}
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl font-semibold transition"
+      >
+        Continue
+      </button>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }
