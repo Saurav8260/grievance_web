@@ -8,19 +8,19 @@ export default function UserDetails() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchUser();
-  }, []);
+    const fetchUser = async () => {
+      try {
+        const data = await getUserById(id);
+        setUser(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const fetchUser = async () => {
-    try {
-      const data = await getUserById(id);
-      setUser(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    fetchUser();
+  }, [id]);
 
   console.log("User ID:", id);
 
