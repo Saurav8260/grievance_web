@@ -62,11 +62,11 @@ export default function Sidebar() {
           title="Profile"
         />
 
-        <SidebarButton
+        {/* <SidebarButton
           onClick={() => navigate("/settings")}
           icon={<FiSettings />}
           title="Settings"
-        />
+        /> */}
 
         <SidebarButton
           onClick={() => {
