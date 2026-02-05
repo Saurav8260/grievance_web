@@ -363,7 +363,7 @@ export default function Dashboard() {
       </div>
 
       {/* Name Modal */}
-      {showNameModal && (
+      {/* {showNameModal && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md mx-4">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
@@ -389,7 +389,7 @@ export default function Dashboard() {
             </button>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-const BASE_URL = "https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod";
+const BASE_URL = " https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod";
 // https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod
 
 // ================= LOGIN =================
@@ -343,3 +343,31 @@ export const uploadAttachments = async (files, grievanceId) => {
 
   return true;
 };
+
+// ================= EXPORT GRIEVANCES (EXCEL / CSV / PDF) =================
+export const exportGrievances = async (grievanceIds, format) => {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${BASE_URL}/grievances/export`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      grievanceIds,
+      format, // "EXCEL" | "CSV" | "PDF"
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText || "Export failed");
+  }
+
+  // 👇 IMPORTANT: convert response to blob
+  const blob = await response.blob();
+
+  return blob;
+};
+

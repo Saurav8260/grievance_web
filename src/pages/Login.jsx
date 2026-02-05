@@ -8,6 +8,7 @@ export default function Login() {
     password: "",
     role: "ADMIN",
   });
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -18,37 +19,27 @@ export default function Login() {
     setError("");
 
     if (!form.name || !form.password) {
-      setError(" name and password are required");
+      setError("Name and password are required");
       return;
     }
 
     try {
       setLoading(true);
 
-      // const res = await loginUser(form );
       const res = await loginUser({
         ...form,
         role: "ADMIN",
       });
 
+      console.log("Login Response:", res);
 
-      console.log(res);
+      // ✅ Save login details
       localStorage.setItem("token", res.token);
       localStorage.setItem("id", JSON.stringify(res.userId));
       localStorage.setItem("role", res.role);
-      // localStorage.setItem("userId", res.userId);
 
-      // Force user to enter name before dashboard
-      // const savedName = localStorage.getItem("dashboard_name");
-      // if (!savedName) {
-      //   const name = prompt("Please enter your name to continue:");
-      //   if (!name || !name.trim()) {
-      //     setError("Name is required to enter dashboard");
-      //     setLoading(false);
-      //     return;
-      //   }
-      //   localStorage.setItem("dashboard_name", name);
-      // }
+      // 🔥 Save username for dashboard
+      localStorage.setItem("dashboard_name", form.name);
 
       navigate("/dashboard");
     } catch (err) {
@@ -62,7 +53,9 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-100">
       <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-10">
         <div className="text-center mb-8">
-          <h2 className="text-4xl font-extrabold text-blue-700">Welcome Back</h2>
+          <h2 className="text-4xl font-extrabold text-blue-700">
+            Welcome Back
+          </h2>
           <p className="text-gray-500 mt-2 text-sm">
             Login to access your dashboard
           </p>

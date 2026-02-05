@@ -177,41 +177,62 @@ export default function GrievanceDetails() {
         </div>
 
         {/* Attachments */}
-        <div className="border-t px-6 py-4">
-          <h3 className="text-sm font-semibold text-gray-700 mb-3">
-            Attachments
-          </h3>
+       <div className="border-t px-6 py-4">
+  <h3 className="text-sm font-semibold text-gray-700 mb-3">
+    Attachments
+  </h3>
 
-          {grievance.attachments?.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {grievance.attachments.map((file) => (
-                <a
-                  key={file.attachmentId}
-                  href={file.s3Url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="border rounded-lg overflow-hidden hover:shadow transition"
-                >
-                  {file.fileType.startsWith("image") && (
-                    <img
-                      src={file.s3Url}
-                      alt={file.fileName}
-                      className="w-full h-40 object-cover"
-                    />
-                  )}
-                  <div className="p-2 text-xs">
-                    <p className="font-semibold truncate">{file.fileName}</p>
-                    <p className="text-gray-500">
-                      {(file.fileSize / 1024).toFixed(1)} KB
-                    </p>
-                  </div>
-                </a>
-              ))}
+  {Array.isArray(grievance.attachments) &&
+  grievance.attachments.length > 0 ? (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      {grievance.attachments.map((file, index) => {
+        // 🔥 Build proper file URL
+        const fileUrl =
+          file.s3Url ||
+          `http://localhost:8080/uploads/${file.fileName || file}`;
+
+        const isImage =
+          file?.fileType?.startsWith("image") ||
+          fileUrl.match(/\.(jpg|jpeg|png|gif)$/i);
+
+        return (
+          <a
+            key={file.attachmentId || index}
+            href={fileUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="border rounded-lg overflow-hidden hover:shadow transition"
+          >
+            {isImage && (
+              <img
+                src={fileUrl}
+                alt={file.fileName || "attachment"}
+                className="w-full h-40 object-cover"
+              />
+            )}
+
+            <div className="p-2 text-xs">
+              <p className="font-semibold truncate">
+                {file.fileName || file}
+              </p>
+
+              {file.fileSize && (
+                <p className="text-gray-500">
+                  {(file.fileSize / 1024).toFixed(1)} KB
+                </p>
+              )}
             </div>
-          ) : (
-            <p className="text-gray-500 text-sm">No attachments available</p>
-          )}
-        </div>
+          </a>
+        );
+      })}
+    </div>
+  ) : (
+    <p className="text-gray-500 text-sm">
+      No attachments available
+    </p>
+  )}
+</div>
+
 
         <div className="bg-gray-50 px-6 py-3 text-right text-xs text-gray-500">
           Last updated automatically from central grievance system

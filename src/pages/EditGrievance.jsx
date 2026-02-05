@@ -402,7 +402,7 @@
 
 // editable grievance page for admin/agent to update grievance details
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, UNSAFE_createClientRoutesWithHMRRevalidationOptOut } from "react-router-dom";
 import { getGrievanceById, updateGrievance, uploadAttachments } from "../api/userService";
 
 
@@ -740,39 +740,46 @@ export default function EditGrievance() {
               Attachments
             </h3>
 
-            {Array.isArray(form.attachments) && form.attachments.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-                {form.attachments.map((file, index) => {
-                  const fileUrl = file.s3Url || URL.createObjectURL(file);
-                  const isImage =
-                    file.fileType?.startsWith("image") ||
-                    file.type?.startsWith("image");
+           {Array.isArray(form.attachments) && form.attachments.length > 0 && (
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+    {form.attachments.map((file, index) => {
+      const isNewFile = file instanceof File;
 
-                  return (
-                    <a
-                      key={index}
-                      href={file.s3Url || fileUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="border rounded-lg overflow-hidden hover:shadow transition"
-                    >
-                      {isImage && (
-                        <img
-                          src={file.s3Url || fileUrl}
-                          alt={file.fileName || file.name || `Attachment ${index + 1}`}
-                          className="w-full h-40 object-cover"
-                        />
-                      )}
-                      <div className="p-2 text-xs">
-                        <p className="font-semibold truncate">
-                          {file.fileName || file.name || `Attachment ${index + 1}`}
-                        </p>
-                      </div>
-                    </a>
-                  );
-                })}
-              </div>
-            )}
+      // 🔥 FIX: Build correct URL
+      const fileUrl = isNewFile
+        ? URL.createObjectURL(file)
+        : file.s3Url ||
+          `http://localhost:8080/uploads/${file.fileName || file}`;
+
+      const isImage =
+        file?.fileType?.startsWith("image") ||
+        file?.type?.startsWith("image") ||
+        fileUrl.match(/\.(jpg|jpeg|png|gif)$/i);
+
+      return (
+        <div
+          key={index}
+          className="border rounded-lg overflow-hidden hover:shadow transition"
+        >
+          {isImage && (
+            <img
+              src={fileUrl}
+              alt={file.fileName || file.name || `Attachment ${index + 1}`}
+              className="w-full h-40 object-cover"
+            />
+          )}
+
+          <div className="p-2 text-xs">
+            <p className="font-semibold truncate">
+              {file.fileName || file.name || file}
+            </p>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+)}
+
 
             <div>
               <label className="block text-sm font-medium text-gray-600 mb-1">
@@ -812,3 +819,4 @@ export default function EditGrievance() {
     </div>
   );
 }
+
