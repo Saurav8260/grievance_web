@@ -1,4 +1,4 @@
-const BASE_URL = " https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod";
+const BASE_URL = "https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod";
 // https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod
 
 // ================= LOGIN =================
@@ -19,7 +19,7 @@ export const loginUser = async (payload) => {
 
   return data;
 };
-
+console
 
 
 // ================= CREATE USER =================
