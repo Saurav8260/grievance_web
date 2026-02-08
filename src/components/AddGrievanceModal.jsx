@@ -28,13 +28,23 @@ export default function AddGrievanceModal({ onClose, onSuccess }) {
   const blocks = Object.keys(locationMaster);
   const gps = form.block ? Object.keys(locationMaster[form.block]) : [];
   const villages =
-    form.gp && form.block
-      ? Object.keys(locationMaster[form.block][form.gp])
-      : [];
-  const wards =
-    form.villageSahi && form.block && form.gp
-      ? locationMaster[form.block][form.gp][form.villageSahi]
-      : [];
+  form.block === "Athagarh NAC"
+    ? form.wardNo
+      ? locationMaster[form.block][form.wardNo]
+      : []
+    :  form.block
+    ? Object.keys(locationMaster[form.block][form.gp] || {})
+    : [];
+
+ const wards =
+   form.block === "Athagarh NAC"
+     ? form.block
+       ? Object.keys(locationMaster[form.block])
+       : []
+     : form.villageSahi && form.block && form.gp
+       ? locationMaster[form.block][form.gp][form.villageSahi]
+       : [];
+
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -49,7 +59,11 @@ export default function AddGrievanceModal({ onClose, onSuccess }) {
     } else if (name === "gp") {
       setForm({ ...form, gp: value, villageSahi: "", wardNo: "" });
     } else if (name === "villageSahi") {
-      setForm({ ...form, villageSahi: value, wardNo: "" });
+      setForm({
+        ...form,
+        villageSahi: value,
+        wardNo: form.block === "Athagarh NAC" ? form.wardNo : "",
+      });
     } else {
       setForm({ ...form, [name]: value });
     }
@@ -148,30 +162,56 @@ export default function AddGrievanceModal({ onClose, onSuccess }) {
           options={blocks}
           onChange={handleChange}
         />
-        <Select
-          label="GP"
-          name="gp"
-          value={form.gp}
-          options={gps}
-          onChange={handleChange}
-          disabled={!form.block}
-        />
-        <Select
-          label="Village / Sahi"
-          name="villageSahi"
-          value={form.villageSahi}
-          options={villages}
-          onChange={handleChange}
-          disabled={!form.gp}
-        />
-        <Select
-          label="Ward No"
-          name="wardNo"
-          value={form.wardNo}
-          options={wards}
-          onChange={handleChange}
-          disabled={!form.villageSahi}
-        />
+        {form.block === "Athagarh NAC" ? (
+          <>
+            <Select
+              label="Ward No"
+              name="wardNo"
+              value={form.wardNo}
+              options={wards}
+              onChange={handleChange}
+              disabled={!form.block}
+            />
+
+            <Select
+              label="Village / Sahi"
+              name="villageSahi"
+              value={form.villageSahi}
+              options={villages}
+              onChange={handleChange}
+              disabled={!form.wardNo}
+            />
+          </>
+        ) : (
+          <>
+            <Select
+              label="GP"
+              name="gp"
+              value={form.gp}
+              options={gps}
+              onChange={handleChange}
+              disabled={!form.block}
+            />
+
+            <Select
+              label="Village / Sahi"
+              name="villageSahi"
+              value={form.villageSahi}
+              options={villages}
+              onChange={handleChange}
+              disabled={!form.gp}
+            />
+
+            <Select
+              label="Ward No"
+              name="wardNo"
+              value={form.wardNo}
+              options={wards}
+              onChange={handleChange}
+              disabled={!form.villageSahi}
+            />
+          </>
+        )}
 
         <Input
           label="Address"
