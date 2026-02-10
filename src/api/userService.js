@@ -1,4 +1,4 @@
-const BASE_URL = "https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prody";
+const BASE_URL = "https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod";
 // https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod
 // http://localhost:8080/api
 
