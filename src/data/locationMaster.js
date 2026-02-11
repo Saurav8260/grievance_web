@@ -9,7 +9,7 @@ const locationMaster = {
     Dhaipur: wards,
     Gadadhapur: wards,
     Somanathpur: wards,
-    Chhatabara:wards,
+    Chatabara:wards,
     Radhaprasannapur: wards
   },
 
@@ -35,7 +35,7 @@ const locationMaster = {
   },
 
   Sathilo: {
-    Sathio: wards,
+    Sathilo: wards,
     Talabasta: wards,
     Koranga: wards,
     kuanla: wards
@@ -77,7 +77,7 @@ const locationMaster = {
     Kumarpur: wards,
     Balipur: wards,
     Kantania: wards,
-    // Santanibati: wards,
+     Santanibati: wards,
     Dampatipur: wards,
    
   },
@@ -118,9 +118,9 @@ const locationMaster = {
     Gourangpur: wards,
     
   },
-   Kusapangi: {
+   Kuspangi: {
    
-    Kusapangi: wards,
+    Kuspangi: wards,
     Pahilabaar: wards,
     Jemadeipur: wards,
      Sarkoli: wards,
@@ -222,7 +222,7 @@ const locationMaster = {
     Badabhindala: wards,
     Gopiballavpur: wards,
     Raghunathpurpatna: wards,
-    Jagaiapada: wards,
+    Jagiaapada: wards,
   },
   Jenapadadesh: {
     Jenapadadesh: wards,
@@ -301,6 +301,10 @@ const locationMaster = {
     Achalakot:{
       Badasahi:wards,
        Mundasahi:wards,
+       Sabarsahi:wards,
+       Maalisahi:wards,
+       Nuasahi:wards,
+       Sanapatana:wards,
        "Sanapatana Sabarsahi":wards,
        Badapatna:wards,
        Haridapasi:wards
@@ -312,7 +316,7 @@ const locationMaster = {
        khandahata:wards,
       
     },
-     Bhiruda:{
+     Viruda:{
       Uppargada:wards,
        Talagada:wards,
        Godijharia:wards,
@@ -331,8 +335,8 @@ const locationMaster = {
      Hatamala:{
       Hatamala:wards,
       Nandapur:wards,
-      Sunthipala:wards,
-      Samapur:wards,
+      Sunthipal:wards,
+      Saanpur:wards,
       Bishnupur:wards
     },
      Gadadharpur:{
@@ -359,33 +363,45 @@ const locationMaster = {
        Belanta:wards,
        Gokhanakhala:wards,
        Vejia:wards,
-      
+       Marichia:wards,
+       Khajuripada:wards,
+       "Grid sahi":wards,
+       Paikasahi:wards,
     },
      Panchagaon:{
       Panchagaon:wards,
        Kadamasahi:wards,
        Seshagaon:wards,
        Tentuliragadi:wards,
-       Sudarsanpur:wards,
        Popara:wards,
-      
+       Sudarsanpur:wards,
     },
     Nuapatana:{
       Gahamarasahi:wards,
-       Majhisahi:wards,
-       Badasahi:wards,
-       Talasahi:wards,
-       Nalikanisahi:wards,
-       Chasasahi:wards,
+       "Majhi sahi":wards,
+       "Bada sahi":wards,
+       "Tala sahi":wards,
+       "Nalikanti sahi":wards,
+       "Chasa sahi":wards,
        Sadaksahi:wards,
-       "Kalapata sahi":wards,
+       "Kalapatasahi":wards,
        Surendrapatana:wards,
+       Telisahi:wards,
+       "Golakhpatna sahi":wards,
+       "Hariballav sahi":wards,
+       "Sabar sahi":wards,
+       "Bidyanagari":wards,
+       "Kansari sahi":wards,
+       "Bali sahi":wards,
+       "Phalikia sahi":wards,
+      " Harijana sahi":wards,
        Mundiasahi:wards
     },
     "Puruna Tigiria":{
       "Puruna Tigiria":wards,
        Paikianra:wards,
        Amuniasahi:wards,
+      " Jatiani sabarsahi":wards,
        Chasanhara:wards,
        
     },
@@ -394,6 +410,8 @@ const locationMaster = {
        Pankala:wards,
       Basudevpur:wards,
        Banamalipur:wards,
+       Goutampur:wards,
+       Godisahi:wards,
        chinapatana:wards,
     },
     Bindhanima:{
@@ -404,13 +422,14 @@ const locationMaster = {
       
     },
     Nizigarh:{
+      Nizigarh:wards,
      Uppargada:wards,
        Majhigada:wards,
        Talagada:wards,
-       Nizigarh:wards,
        Karadapali:wards,
        Tigiria:wards,
        "Gopinathpur sasana":wards,
+       "Kadalibadi sabarsahi":wards,
       
     },
   
@@ -431,7 +450,7 @@ const locationMaster = {
       "Mathasahi": wards,
       "Majhisahi": wards,
       "Benguniasahi": wards,
-      "Amarabatur": wards
+      "Amarabatipur": wards
     },
 
     "Mahisalanda": {
@@ -440,11 +459,12 @@ const locationMaster = {
       "Ambilajhari": wards,
       "Banto": wards,
       "Gahanda": wards,
-      "Dudhanali": wards,
-      "Mangrajpur": wards
+      "Dudhianali": wards,
+     
     },
 
     "Mangarajpur": {
+      Mangarajpur: wards,
       "Bagdhara": wards,
       "Ramchandrapur": wards,
       "Patapolasahi": wards,
@@ -453,10 +473,11 @@ const locationMaster = {
       "Berena": wards
     },
 
-    "Badasamntapur": {
+    "Badasamntrapur": {
+      "Badasamntarapur": wards,
       "Sardar Kharida": wards,
       "Badapadagon": wards,
-      "Dianipatna": wards
+      "Dianipathena": wards
     },
 
     "Brahmapur": {
@@ -469,20 +490,20 @@ const locationMaster = {
   },
 
  "Athagarh NAC": {
-  "1": ["Hemamalapur", "Guhalapadia", "Santasahi"],
-  "2": ["Talashahi", "Tanlasahi", "Other"],
+  "1": ["Hemamalapur", "Guhalapadia", "Samantasahi"],
+  "2": ["Talasahi", "Tanlasahi"],
   "3": ["Gadashi", "Dhobasahi", "Pathanasahi"],
-  "4": ["Keutasahi", "Muslim basti", "Damasahi", "Harijanasahi"],
+  "4": ["Keutasahi", "Muslim basti", "Damasahi", "Hadisahi","Pana sahi","Jharana chakka part","Adimata colony"],
   "5": ["Rasarashikpur"],
-  "6": ["Sasana", "Forest colony"],
-  "7": ["Upparsahi", "Kalubasti", "Uttarachandisahi"],
+  "6": ["Sasana", "Block colony","Ghoda sasana","old busstand part",],
+  "7": ["Upparsahi", "Kalubasti", "Uttarachandisahi","Police colony","Tanlasahi"],
   "8": ["Bautisahi", "Tanlasahi", "Puruna Busstand"],
   "9": ["Birakishorepur"],
   "10": ["Bagetsahi", "Harisaranapur", "Satichourasahi"],
-  "11": ["Gaudasahi", "Brahmanasasana", "Hadisahi", "Badheitota", "Gudiasahi"],
+  "11": ["Gaudasahi", "Bramhana sasana", "Hadisahi", "Badheitota", "Gudiasahi"],
   "12": ["Jagannath sahi", "Telisahi", "Bhagabatasahi", "Doulamandapsahi"],
   "13": ["Panasahi", "Keutasahi", "Sadarsahi", "Doulamandapsahi"],
-  "14": ["Jharana chaka", "Sabar sahi", "Medical colony", "Housing board"],
+  "14": ["Jharana chaka part", "Sabar sahi", "Medical colony", "Housing board"],
   "15": ["Banikanthanagar", "Gandhi marg"],
   "16": ["Kangada sahi", "Maitri nagar"],
   "17": ["Hatasahi", "Kantol bazar", "Bazarsahi", "Keutasahi", "Sabarasahi", "Matiasahi", "Chandiroad sahi","Satichourasahi"],
