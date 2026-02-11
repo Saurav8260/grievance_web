@@ -89,58 +89,96 @@ export default function AddGrievanceModal({ onClose, onSuccess }) {
     setForm({ ...form, topics: newTopics });
   };
 
-  const handleSubmit = async () => {
-    try {
-      setLoading(true);
-      setError("");
+const handleSubmit = async () => {
+  try {
+    setError("");
 
-      const payload = {
-        name: form.name,
-        fatherSpouseName: form.fatherSpouseName,
-        contact: form.contact,
-        block: form.block,
-        gp: form.gp,
-        villageSahi: form.villageSahi,
-        wardNo: form.wardNo,
-        address: form.address,
-        topic1: form.topics[0] || "",
-        topic2: form.topics[1] || "",
-        topic3: form.topics[2] || "",
-        topic4: form.topics[3] || "",
-        topic5: form.topics[4] || "",
-        grievanceDetails: form.grievanceDetails,
-        agentRemarks: form.agentRemarks,
-        date: form.createddate,
-        agentName: form.agentName,
-      };
-
-      // ✅ STEP 1: Create grievance
-      const created = await createGrievance(payload);
-
-      const grievanceId =
-        created?.id ||
-        created?.grievanceId ||
-        created?.data?.id ||
-        created?.data?.grievanceId;
-
-      if (!grievanceId) {
-        throw new Error("Grievance ID not returned from backend");
-      }
-
-      // ✅ STEP 2: Upload multiple attachments
-      if (form.attachment && form.attachment.length > 0) {
-        await uploadAttachments(form.attachment, grievanceId);
-      }
-
-      onSuccess();
-      onClose();
-    } catch (err) {
-      console.error("Add grievance error:", err);
-      setError(err.message || "Failed to save grievance");
-    } finally {
-      setLoading(false);
+    // ✅ VALIDATION START
+    if (!form.name.trim()) {
+      return setError("Citizen Name is required");
     }
-  };
+
+    if (!form.fatherSpouseName.trim()) {
+      return setError("Father / Spouse Name is required");
+    }
+
+    if (!form.contact.trim()) {
+      return setError("Contact is required");
+    }
+
+    if (!/^\d{10}$/.test(form.contact)) {
+      return setError("Contact must be 10 digit number");
+    }
+
+    if (!form.block) {
+      return setError("Block is required");
+    }
+
+    if (form.block !== "Athagarh NAC" && !form.gp) {
+      return setError("GP is required");
+    }
+
+    if (!form.wardNo) {
+      return setError("Ward No is required");
+    }
+
+    if (!form.villageSahi) {
+      return setError("Village / Sahi is required");
+    }
+
+    if (!form.grievanceDetails.trim()) {
+      return setError("Grievance Details is required");
+    }
+    // ✅ VALIDATION END
+
+    setLoading(true);
+
+    const payload = {
+      name: form.name,
+      fatherSpouseName: form.fatherSpouseName,
+      contact: form.contact,
+      block: form.block,
+      gp: form.gp,
+      villageSahi: form.villageSahi,
+      wardNo: form.wardNo,
+      address: form.address,
+      topic1: form.topics[0] || "",
+      topic2: form.topics[1] || "",
+      topic3: form.topics[2] || "",
+      topic4: form.topics[3] || "",
+      topic5: form.topics[4] || "",
+      grievanceDetails: form.grievanceDetails,
+      agentRemarks: form.agentRemarks,
+      date: form.createddate,
+      agentName: form.agentName,
+    };
+
+    const created = await createGrievance(payload);
+
+    const grievanceId =
+      created?.id ||
+      created?.grievanceId ||
+      created?.data?.id ||
+      created?.data?.grievanceId;
+
+    if (!grievanceId) {
+      throw new Error("Grievance ID not returned from backend");
+    }
+
+    if (form.attachment && form.attachment.length > 0) {
+      await uploadAttachments(form.attachment, grievanceId);
+    }
+
+    onSuccess();
+    onClose();
+  } catch (err) {
+    console.error("Add grievance error:", err);
+    setError(err.message || "Failed to save grievance");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
