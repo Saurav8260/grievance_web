@@ -24,6 +24,8 @@ export default function AddGrievanceModal({ onClose, onSuccess }) {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
+
 
   const blocks = Object.keys(locationMaster);
   const gps = form.block ? Object.keys(locationMaster[form.block]) : [];
@@ -46,28 +48,41 @@ export default function AddGrievanceModal({ onClose, onSuccess }) {
        : [];
 
 
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
+ const handleChange = (e) => {
+  const { name, value, files } = e.target;
 
-    if (name === "attachment") {
-      setForm((prev) => ({
-        ...prev,
-        attachment: Array.from(files), // ✅ store all selected files
-      }));
-    } else if (name === "block") {
-      setForm({ ...form, block: value, gp: "", villageSahi: "", wardNo: "" });
-    } else if (name === "gp") {
-      setForm({ ...form, gp: value, villageSahi: "", wardNo: "" });
-    } else if (name === "villageSahi") {
-      setForm({
-        ...form,
-        villageSahi: value,
-        wardNo: form.block === "Athagarh NAC" ? form.wardNo : "",
-      });
-    } else {
-      setForm({ ...form, [name]: value });
+  
+  setFieldErrors((prev) => ({ ...prev, [name]: false }));
+
+ 
+  if (name === "contact") {
+    const numericValue = value.replace(/\D/g, ""); 
+
+    if (numericValue.length <= 10) {
+      setForm({ ...form, contact: numericValue });
     }
-  };
+    return;
+  }
+
+  if (name === "attachment") {
+    setForm((prev) => ({
+      ...prev,
+      attachment: Array.from(files),
+    }));
+  } else if (name === "block") {
+    setForm({ ...form, block: value, gp: "", villageSahi: "", wardNo: "" });
+  } else if (name === "gp") {
+    setForm({ ...form, gp: value, villageSahi: "", wardNo: "" });
+  } else if (name === "villageSahi") {
+    setForm({
+      ...form,
+      villageSahi: value,
+      wardNo: form.block === "Athagarh NAC" ? form.wardNo : "",
+    });
+  } else {
+    setForm({ ...form, [name]: value });
+  }
+};
 
   const addTopic = () => {
   if (form.topics.length >= 5) return; 
@@ -88,50 +103,43 @@ export default function AddGrievanceModal({ onClose, onSuccess }) {
     newTopics[index] = value;
     setForm({ ...form, topics: newTopics });
   };
-
 const handleSubmit = async () => {
+
+  if (loading) return;   // ✅ Prevent double click instantly
+
   try {
     setError("");
+    let errors = {};
 
-    // ✅ VALIDATION START
-    if (!form.name.trim()) {
-      return setError("Citizen Name is required");
-    }
+    // Required fields
+    if (!form.name.trim()) errors.name = true;
+    if (!form.fatherSpouseName.trim()) errors.fatherSpouseName = true;
+  if (!form.contact.trim() || !/^\d{10}$/.test(form.contact))
+  errors.contact = true;
 
-    if (!form.fatherSpouseName.trim()) {
-      return setError("Father / Spouse Name is required");
-    }
+    if (!form.block) errors.block = true;
 
-    if (!form.contact.trim()) {
-      return setError("Contact is required");
-    }
+    // GP required only if NOT NAC
+    if (form.block !== "Athagarh NAC" && !form.gp)
+      errors.gp = true;
 
-    if (!/^\d{10}$/.test(form.contact)) {
-      return setError("Contact must be 10 digit number");
-    }
+    // Ward required ONLY for NAC
+    if (form.block === "Athagarh NAC" && !form.wardNo)
+      errors.wardNo = true;
 
-    if (!form.block) {
-      return setError("Block is required");
-    }
+    if (!form.villageSahi) errors.villageSahi = true;
 
-    if (form.block !== "Athagarh NAC" && !form.gp) {
-      return setError("GP is required");
-    }
+    if (!form.grievanceDetails.trim())
+      errors.grievanceDetails = true;
 
-    if (!form.wardNo) {
-      return setError("Ward No is required");
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setError("Fill Complete Data");
+      return;
     }
-
-    if (!form.villageSahi) {
-      return setError("Village / Sahi is required");
-    }
-
-    if (!form.grievanceDetails.trim()) {
-      return setError("Grievance Details is required");
-    }
-    // ✅ VALIDATION END
 
     setLoading(true);
+
 
     const payload = {
       name: form.name,
@@ -193,13 +201,42 @@ const handleSubmit = async () => {
           </div>
         )}
 
+        <Input
+          label="Citizen Name"
+          name="name"
+          value={form.name}
+          onChange={handleChange}
+          error={fieldErrors.name}
+        />
+
+        <Input
+          label="Father / Spouse"
+          name="fatherSpouseName"
+          value={form.fatherSpouseName}
+          onChange={handleChange}
+          error={fieldErrors.fatherSpouseName}
+        />
+
+        <Input
+          label="Contact"
+          type="tel"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          name="contact"
+          value={form.contact}
+          onChange={handleChange}
+          error={fieldErrors.contact}
+        />
+
         <Select
           label="Block"
           name="block"
           value={form.block}
           options={blocks}
           onChange={handleChange}
+          error={fieldErrors.block}
         />
+
         {form.block === "Athagarh NAC" ? (
           <>
             <Select
@@ -250,7 +287,13 @@ const handleSubmit = async () => {
             />
           </>
         )}
-
+        <Input
+          label="Address"
+          name="address"
+          value={form.address}
+          onChange={handleChange}
+        />
+        {/* 
         <Input
           label="Address"
           name="address"
@@ -274,7 +317,7 @@ const handleSubmit = async () => {
           name="contact"
           value={form.contact}
           onChange={handleChange}
-        />
+        /> */}
 
         <div className="mb-2">
           <label className="text-xs text-gray-600">Topics</label>
@@ -322,7 +365,10 @@ const handleSubmit = async () => {
           name="grievanceDetails"
           value={form.grievanceDetails}
           onChange={handleChange}
+          error={fieldErrors.grievanceDetails}
+          textarea
         />
+
         <Input
           label="Remark"
           name="agentRemarks"
@@ -388,32 +434,53 @@ const handleSubmit = async () => {
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md"
+            className={`px-4 py-2 rounded-md text-white transition ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
           >
-            {loading ? "Saving..." : "Submit"}
+            {loading ? "Submitting..." : "Submit"}
           </button>
         </div>
       </div>
     </div>
   );
 }
-
-function Input({ label, name, value, onChange, readOnly }) {
+function Input({ label, name, value, onChange, readOnly, error, textarea }) {
   return (
     <div className="mb-2">
       <label className="text-xs text-gray-600">{label}</label>
-      <input
-        name={name}
-        value={value}
-        onChange={onChange}
-        readOnly={readOnly}
-        className="w-full border rounded-md px-3 py-2 text-sm"
-      />
+
+      {textarea ? (
+        <textarea
+          name={name}
+          value={value}
+          onChange={onChange}
+          readOnly={readOnly}
+          rows={4}
+          className={`w-full border rounded-md px-3 py-2 text-sm resize-none ${
+            error ? "border-red-500" : ""
+          }`}
+        />
+      ) : (
+        <input
+          name={name}
+          value={value}
+          onChange={onChange}
+          readOnly={readOnly}
+          className={`w-full border rounded-md px-3 py-2 text-sm ${
+            error ? "border-red-500" : ""
+          }`}
+        />
+      )}
     </div>
   );
 }
 
-function Select({ label, name, value, options, onChange, disabled }) {
+
+
+function Select({ label, name, value, options, onChange, disabled, error }) {
   return (
     <div className="mb-2">
       <label className="text-xs text-gray-600">{label}</label>
@@ -422,7 +489,9 @@ function Select({ label, name, value, options, onChange, disabled }) {
         value={value}
         onChange={onChange}
         disabled={disabled}
-        className="w-full border rounded-md px-3 py-2 text-sm"
+        className={`w-full border rounded-md px-3 py-2 text-sm ${
+          error ? "border-red-500" : ""
+        }`}
       >
         <option value="">Select {label}</option>
         {options.map((o) => (
@@ -434,3 +503,4 @@ function Select({ label, name, value, options, onChange, disabled }) {
     </div>
   );
 }
+
