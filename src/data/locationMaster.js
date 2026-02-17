@@ -4,8 +4,8 @@ const wards = [
   "21","22","23","24","25","26","27","28","29","30"
 ];
 const locationMaster = {
-  ATHGARH: {
-    DHAIPUR: {
+ ATHGARH: {
+    Dhaipur: {
     Dhaipur: wards,
     Gadadhapur: wards,
     Somanathpur: wards,
@@ -13,39 +13,39 @@ const locationMaster = {
     Radhaprasannapur: wards
   },
 
-  RADHAGOVINDPUR: {
-   
+  Radhagovindpur: {
+
     Radhamadhabpur: wards,
     Gobindapur: wards,
-    Sudhansumohanpur: wards,
-    RadhaGobindapur: wards,
+    Radhagobindpur: wards,
     Radhaballavpur: wards,
     Laxminarayanpur: wards,
+    Sudhansumohanpur: wards,
     Haripriyapur: wards,
     Radhakesabpur: wards,
   },
    Samsarpur: {
-    Samsarpurpur: wards,
+    Samsarpur: wards,
     Amrutamanohipatna: wards,
     Ankula: wards,
     Budhiapatna: wards,
-    Jaganathpur: wards,
-    Radhapatipur: wards,
-   
+    Jagannathpur: wards,
+    Radhapatipur: wards
+
   },
 
   Sathilo: {
     Sathilo: wards,
     Talabasta: wards,
     Koranga: wards,
-    kuanla: wards
+    Kuanla: wards,
   },
   Ichhapur: {
     Ichhapur: wards,
     Gudupada: wards,
     Patanda: wards,
     Arakhapatna: wards,
-    Muktadeipur: wards,
+    Muktadeipur: wards
   },
 
   Anantpur: {
@@ -55,158 +55,158 @@ const locationMaster = {
     Srirangpur: wards
   },
    Dhurusia: {
-   
+
     Dhurusia: wards,
     Bhuinbarei: wards,
     Jagmohanpur: wards,
     Keutapada: wards,
     Jenapur: wards,
     Gopalprasad: wards,
-    Baudhapur: wards,
+    Baudhapur: wards
   },
 
    Radhakishorepur: {
     Radhakishorepur: wards,
-    Radhadamoderpur: wards,
+    Radhadamodarpur: wards,
     Belda: wards,
     Machhyapur: wards,
     Purusottampur: wards,
-    Khamarnuagaon: wards
+    Khamarnuagaon: wards,
   },
    Kumarpur: {
     Kumarpur: wards,
     Balipur: wards,
     Kantania: wards,
-     Santanibati: wards,
-    Dampatipur: wards,
-   
+    Santanibati: wards,
+    Dampatipur: wards
+
   },
    Joranda: {
-   
+
     Joranda: wards,
     Karikol: wards,
     Indipur: wards,
     Paikarapur: wards,
-    Nuarath: wards,
-    Haridagahira: wards,
-   
+    Naurath: wards,
+    Haridagahira: wards
+
   },
    Rajanagar: {
-   
+
    Rajanagar: wards,
    Tailamal: wards,
-    Gariapat: wards,
-    Betakholi: wards,
-    Banakhandi: wards,
-  
+   Gariapat: wards,
+   Betakholi: wards,
+   Banakhandi: wards
+
   },
    Bentapada: {
     Bentapada: wards,
     Radhakantapatna: wards,
-    Dhanurjaypur: wards,
-    Balipada: wards,
-    Kulagada:wards,
-    "Kendutokoli Sabar Sahi":wards,
+    Kulagada: wards,
+    "Kendutokoli sabar sahi": wards,
     Manapur: wards,
+    Dhanurjaypur: wards,
+    Balipada: wards
   },
    Tarading: {
-   
+
    Tarading: wards,
-    Gajaamba: wards,
-    Tentulia: wards,
-    Bailo: wards,
-    Gourangpur: wards,
-    
+   Gajaamba: wards,
+   Tentulia: wards,
+   Bailo: wards,
+   Gourangpur: wards
+
   },
    Kuspangi: {
-   
+
     Kuspangi: wards,
     Pahilabaar: wards,
     Jemadeipur: wards,
-     Sarkoli: wards,
-    Baula: wards,
+    Sarkoli: wards,
+    Baula: wards
   },
    Oranda: {
    Oranda: wards,
-    Bali: wards,
-  "Bali sasan": wards,
-    "Radhapriapur Sasan": wards,
-    Sitarampur: wards,
-    Kapursingh: wards,
-   
+   Bali: wards,
+   "Bali Sasan": wards,
+   "Radhapriapur Sasan": wards,
+   Sitarampur: wards,
+   Kapursingh: wards
+
   },
    Mancheswar: {
    Mancheswar: wards,
-    Paikarapur: wards,
-    SuniaMuhan: wards,
-    Kalankipur: wards,
-    Lingapada: wards,
-    Prasannapur: wards,
-    Narangabasta: wards,
-    Brahmanbasta: wards,
-    Bamanpur: wards,
-    Bishnupur: wards,
-    Nuadiha: wards,
+   Paikarapur: wards,
+   Suniamuhan: wards,
+   Kalankipur: wards,
+   Lingapada: wards,
+   Prasannapur: wards,
+   Nuadiha: wards,
+   Narangabasta: wards,
+   Brahmanbasta: wards,
+   Bamanpur: wards,
+   Bishnupur: wards
 
   },
    Kandarpur: {
-   
+
     Kandarpur: wards,
-    Nandilo: wards,
-    Routrapur: wards,
-    
+    Nandailo: wards,
+    Routrapur: wards
+
   },
    Mahakalbasta: {
-   
+
     Mahakalbasta: wards,
     Madhabpur: wards,
     Dahisara: wards,
     Champapur: wards,
     Radhadhabapur: wards,
     Parsurampur: wards,
-    Haripur: wards,
-   
+    Haripur: wards
+
   },
    Ghantikhal: {
     Ghantikhal: wards,
     Nidhipur: wards,
     Radhashyampur: wards,
-    Ramshaympur: wards,
-   Chandrabalishyampur: wards,
-   
+    Ramshyampur: wards,
+    Chandrabalishyampur: wards
+
   },
    Dorada: {
-   
+
     Dorada: wards,
     Iswara: wards,
     Chunapada: wards,
     Gopinathpur: wards,
     Udayapurdesh: wards,
     Tarsing: wards,
-    Gundichapur: wards,
+    Gundichapur: wards
   },
   Bhogara: {
     Bhogara: wards,
     Mathurapur: wards,
     Totapada: wards,
-     Radhasaranpur: wards,
-    
+    Radhasaranpur: wards
+
   },
   Kulailo: {
     Kulailo: wards,
-    UdayaPurdal: wards,
+    Udayapurdal: wards,
     Karakamal: wards,
     Radhakrushnapur: wards,
     Talagarh: wards,
     Patalinga: wards,
     Silapata: wards,
-    Birijinga: wards,
+    Birijinga: wards
   },
    Megha: {
     Megha: wards,
     Dhurukudia: wards,
     Daspur: wards,
-    Baghera: wards,
+    Baghera: wards
   },
    Katakiasahi: {
     Katakiasahi: wards,
@@ -215,22 +215,22 @@ const locationMaster = {
     Bandhahata: wards,
     Nuagada: wards,
     Balarampur: wards,
-    Petenigaon: wards,
+    Petenigaon: wards
   },
    Badabhuin: {
     Badabhuindesh: wards,
     Badabhindala: wards,
     Gopiballavpur: wards,
     Raghunathpurpatna: wards,
-    Jagiaapada: wards,
+    Jagiapada: wards
   },
   Jenapadadesh: {
     Jenapadadesh: wards,
     Jenapadadal: wards,
-    Kalaragada:wards,
     Bhagirathipur: wards,
+    Kalaragada: wards,
     Matikote: wards,
-    Jaganathballavpursasan: wards,
+    JagannathBallavpurSasan: wards
   },
    Khuntakata: {
     Khuntakata: wards,
@@ -238,13 +238,13 @@ const locationMaster = {
     Nuabandha: wards,
     Mahidhapur: wards,
     Radhamohnpur: wards,
-    Radhadarshanpur: wards,
+    Radhadarsanpur: wards
   },
    Radhakrushnapur: {
     Radhakrushnapur: wards,
     Rahangol: wards,
     Khanduali: wards,
-    Saraswatipur: wards,
+    Saraswatipur: wards
   },
    Kandarei: {
     Kandarei: wards,
@@ -252,20 +252,20 @@ const locationMaster = {
     Mahalaxmipur: wards,
     Manitiri: wards,
     Sabitripur: wards,
-    Dalua: wards,
+    Dalua: wards
   },
    Khuntuni: {
     Khuntuni: wards,
     Rampei: wards,
     Krushnashyampur: wards,
-    Nrusinghpur: wards,
-    Radharamanpur: wards,
+    Nursinghpur: wards,
+    Radharamanpur: wards
   },
    Dalabhaga: {
     Dalabhaga: wards,
     Champia: wards,
     Chhenakhianuagaon: wards,
-   
+
   },
    Gurudijhatia: {
     Gurudijhatia: wards,
@@ -273,15 +273,15 @@ const locationMaster = {
     Kolathapangi: wards,
     Kotar: wards,
     Pithakhia: wards,
-    Sauria: wards,
+    Sauria: wards
   },
    Gobara: {
     Gobara: wards,
     Kanthapur: wards,
     "Kadua Nuagaon": wards,
     "Gobara Sasan": wards,
-    Rajaballavpur: wards,
-    
+    Rajaballavpur: wards
+
   },
    Chhagaon: {
     Chhagaon: wards,
@@ -290,50 +290,47 @@ const locationMaster = {
     Charabhaunri: wards,
     Sasanga: wards,
     Baghua: wards,
-    Sarakuan: wards,
-  },
-     
-
+    Sarakuan: wards
   },
 
-  TIGIRIA: {
+
+  },
+  Tigiria: {
    
     Achalakot:{
-      Badasahi:wards,
-       Mundasahi:wards,
-       Sabarsahi:wards,
-       Maalisahi:wards,
-       Nuasahi:wards,
-       Sanapatana:wards,
-       "Sanapatana Sabarsahi":wards,
-       Badapatna:wards,
-       Haridapasi:wards
+     Badasahi:wards,
+     Mundiasahi:wards,
+     Sabarsahi:wards,
+     Maalisahi:wards,
+     Nuasahi:wards,
+     Sanapatana: wards,
+     Badapatna:wards,
+     Haridapasi:wards
     },
      Badanauput:{
-      Badanauput:wards,
-       Salijanga:wards,
-       Baulanga:wards,
-       khandahata:wards,
-      
+     Badanauput:wards,
+     Salijanga:wards,
+     Baulanga:wards,
+     Khandahata:wards 
     },
      Viruda:{
-      Uppargada:wards,
-       Talagada:wards,
-       Godijharia:wards,
-       Balipatana:wards,
-       Panasapatana:wards,
-       Manimagapatna:wards,
-       Viruda:wards
+    Uppargada:wards,
+    Talagada:wards,
+    Godijharia:wards,
+    Balipatana:wards,
+    Panasapatana:wards,
+    Manimagapatna:wards,
+    Viruda:wards
+
     },
      Baliput:{
-      Baliput:wards,
-       Biriput:wards,
-       Baneswarpada:wards,
-       Godarabandha:wards,
-       
+     Baliput:wards,
+     Biriput:wards,
+     Baneswarpada:wards,
+     Godorabandha:wards 
     },
-     Hatamala:{
-      Hatamala:wards,
+     Hatamal:{
+      Hatamal:wards,
       Nandapur:wards,
       Sunthipal:wards,
       Saanpur:wards,
@@ -341,96 +338,94 @@ const locationMaster = {
     },
      Gadadharpur:{
       Gadadharpur:wards,
-       Harisaranapur:wards,
-       Koilikanya:wards,
-       Manapur:wards,
-       Kalibiri:wards,
-       Raghurampur:wards,
-       Kanthipur:wards,
-       Pakhapada:wards,
-       Sananauput:wards
+      Harisaranapur:wards,
+      Koilikanya:wards,
+      Manapur:wards,
+      Kalibiri:wards,
+      Raghurampur:wards,
+      Kanthipur:wards,
+      Pakhapada:wards,
+      Sananauput:wards
     },
-     Somapada:{
+    Somapada:{
       Somapada:wards,
-       Tiarasahi:wards,
-       Baharabila:wards,
-       Mahuladhipi:wards,
-       Kumbhiput:wards,
-      
+      Tiarasahi:wards,
+      Baharabila:wards,
+      Mahuladhipi:wards,
+      Kumbhiput:wards
     },
      Bhogoda:{
       Bhogoda:wards,
-       Belanta:wards,
-       Gokhanakhala:wards,
-       Vejia:wards,
-       Marichia:wards,
-       Khajuripada:wards,
-       "Grid sahi":wards,
-       Paikasahi:wards,
+      Belanta:wards,
+      Gokhanakhala:wards,
+      Marichia:wards,
+      khajuripada:wards,
+      "Grid sahiL":wards,
+      Paikasahi:wards,
+      Vejia:wards,
+
     },
-     Panchagaon:{
-      Panchagaon:wards,
-       Kadamasahi:wards,
-       Seshagaon:wards,
-       Tentuliragadi:wards,
-       Popara:wards,
-       Sudarsanpur:wards,
+    Panchagaon:{
+     Panchagaon:wards,
+     Kadamasahi:wards,
+     Seshagaon:wards,
+     Tentuliragadi:wards,
+     Popara:wards,
+     Sudarsanpur:wards
+
     },
     Nuapatana:{
-      Gahamarasahi:wards,
-       "Majhi sahi":wards,
-       "Bada sahi":wards,
-       "Tala sahi":wards,
-       "Nalikanti sahi":wards,
-       "Chasa sahi":wards,
-       Sadaksahi:wards,
-       "Kalapatasahi":wards,
-       Surendrapatana:wards,
-       Telisahi:wards,
-       "Golakhpatna sahi":wards,
+     Gahamarasahi:wards,
+    " Majhi sahi":wards,
+    " Bada sahi":wards,
+      "Tala sahi":wards,
+"Nalikanti sahi":wards,
+"  Chasa sahi":wards,
+      Sadaksahi:wards,
+      Kalapatasahi:wards,
+      Surendrapatana:wards,
+      "Telisahi":wards,
+      "Golakhpatna sahi":wards,
        "Hariballav sahi":wards,
-       "Sabar sahi":wards,
-       "Bidyanagari":wards,
+        "Sabar sahi":wards,
+        Bidyanagari:wards,
        "Kansari sahi":wards,
        "Bali sahi":wards,
-       "Phalikia sahi":wards,
-      " Harijana sahi":wards,
-       Mundiasahi:wards
+        "Phalikia sahi":wards,
+       "Harijana sahi":wards,
+       "Mundiasahi":wards
+
     },
     "Puruna Tigiria":{
       "Puruna Tigiria":wards,
-       Paikianra:wards,
-       Amuniasahi:wards,
-      " Jatiani sabarsahi":wards,
-       Chasanhara:wards,
-       
+      Paikianra:wards,
+      Amuniasahi:wards,
+      "Jatiani sabarsahi":wards,
+      Chasanhara:wards
     },
     Jamadeipur:{
       Jemdeipur:wards,
-       Pankala:wards,
+      Pankala:wards,
       Basudevpur:wards,
-       Banamalipur:wards,
-       Goutampur:wards,
-       Godisahi:wards,
-       chinapatana:wards,
+      Banamalipur:wards,
+      Goutampur:wards,
+      Godisahi:wards,
+      Chinapatana:wards
+
     },
-    Bindhanima:{
+   Bindhanima:{
       Bindhanima:wards,
-       Sethasahi:wards,
-       Hatasahi:wards,
-       Damasahi:wards,
+      Sethasahi:wards,
+      Hatasahi:wards,
+      Damasahi:wards
+
       
     },
     Nizigarh:{
       Nizigarh:wards,
-     Uppargada:wards,
-       Majhigada:wards,
-       Talagada:wards,
-       Karadapali:wards,
-       Tigiria:wards,
-       "Gopinathpur sasana":wards,
-       "Kadalibadi sabarsahi":wards,
-      
+      Karadapali:wards,
+     " Kadalibadi sabar sahi":wards,
+      "Gopinathpur Sasana":wards,
     },
   
     
@@ -455,7 +450,7 @@ const locationMaster = {
 
     "Mahisalanda": {
       "Mahisalanda": wards,
-      "Machhapangi": wards,
+      "Machapangi": wards,
       "Ambilajhari": wards,
       "Banto": wards,
       "Gahanda": wards,
@@ -464,19 +459,19 @@ const locationMaster = {
     },
 
     "Mangarajpur": {
-      Mangarajpur: wards,
+      "Mangarajpur": wards,
       "Bagdhara": wards,
       "Ramchandrapur": wards,
       "Patapolasahi": wards,
       "Kochilapada": wards,
-      "Kochilnaugaon": wards,
+      "Kochilanugaon": wards,
       "Berena": wards
     },
 
     "Badasamntrapur": {
       "Badasamntarapur": wards,
-      "Sardar Kharida": wards,
-      "Badapadagon": wards,
+      "Sardar kharida": wards,
+      "Badapadagaon": wards,
       "Dianipathena": wards
     },
 
@@ -486,29 +481,31 @@ const locationMaster = {
       "Kamanga": wards,
       "Kanjia": wards,
       "Jamadeipur": wards
+
     },
   },
+ 
 
- "Athagarh NAC": {
-  "1": ["Hemamalapur", "Guhalapadia", "Samantasahi"],
-  "2": ["Talasahi", "Tanlasahi"],
-  "3": ["Gadashi", "Dhobasahi", "Pathanasahi"],
-  "4": ["Keutasahi", "Muslim basti", "Damasahi", "Hadisahi","Pana sahi","Jharana chakka part","Adimata colony"],
-  "5": ["Rasarashikpur"],
-  "6": ["Sasana", "Block colony","Ghoda sasana","old busstand part",],
-  "7": ["Upparsahi", "Kalubasti", "Uttarachandisahi","Police colony","Tanlasahi"],
-  "8": ["Bautisahi", "Tanlasahi", "Puruna Busstand"],
-  "9": ["Birakishorepur"],
-  "10": ["Bagetsahi", "Harisaranapur", "Satichourasahi"],
-  "11": ["Gaudasahi", "Bramhana sasana", "Hadisahi", "Badheitota", "Gudiasahi"],
-  "12": ["Jagannath sahi", "Telisahi", "Bhagabatasahi", "Doulamandapsahi"],
-  "13": ["Panasahi", "Keutasahi", "Sadarsahi", "Doulamandapsahi"],
-  "14": ["Jharana chaka part", "Sabar sahi", "Medical colony", "Housing board"],
-  "15": ["Banikanthanagar", "Gandhi marg"],
-  "16": ["Kangada sahi", "Maitri nagar"],
-  "17": ["Hatasahi", "Kantol bazar", "Bazarsahi", "Keutasahi", "Sabarasahi", "Matiasahi", "Chandiroad sahi","Satichourasahi"],
-  "18": ["Ashok nagar", "Rajabati nagar"]
-} 
+"Athagarh NAC": {
+    "1": ["Hemamalapur",	"Guhalapadia",	"Samantasahi"],
+    "2": ["Talasahi",	"Tanlasahi"						],
+    "3": ["Gadashi",	"Dhobasahi",	"Pathanasahi"					],
+    "4": ["Keutasahi	Muslim basti",	"Damasahi",	"Hadisahi",	"Pana sahi",	"Jharana chakka part",	"Adimata colony"	],
+    "5": ["Rasarashikpur"							],
+    "6": ["Sasana",	"Block colony",	"Ghoda sasana",	"Old bustand part"				],
+    "7": ["Upparsahi",	"Kalubasti",	"Uttarachandisahi",	"police colony",	"Tanlasahi"			],
+    "8": ["Bautisahi",	"Tanlasahi",	"Puruna Busstand"				],
+    "9": ["Birakishorepur"],
+    "10": ["Bagetisahi",	"Harisaranapur",	"satichourasahi"					],
+    "11": ["Gaudasahi",	"Bramhana sasana",	"Hadisahi",	"Badheitota",	"Gudiasahi"			],
+    "12": ["Jagannath sahi",	"telisahi",	"bhagabatasahi",	"Doulamandapsahi"				],
+    "13": ["Panasahi",	"Keutasahi",	"Sadarsahi",	"Doulamandapsahi"				],
+    "14": ["Jharana chaka part",	"Sabar sahi",	"Medical colony",	"Housing board"				],
+    "15": ["Banikanthanagar",	"Gandhi marg"					],
+    "16": ["Kangada sahi",	"Maitri nagar"						],
+    "17": ["Hatasahi",	"Kantol bazar",	"Bazarsahi",	"Keutasahi",	"Sabarasahi",	"Matiasahi",	"Chandiroad sahi",	"Satichourasahi"],
+    "18": ["Ashok nagar",	"Rajabati nagar"						]
+  }
 };
 
 export default locationMaster;
