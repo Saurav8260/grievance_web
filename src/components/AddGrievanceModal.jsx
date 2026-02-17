@@ -458,29 +458,26 @@ export default function AddGrievanceModal({ onClose, onSuccess }) {
   }, [form.block]);
 
   // ✅ Alphabetical Sorting Added (Only this part added)
-
-  const blocks = Object.keys(locationMaster).sort((a, b) =>
-    a.localeCompare(b)
+  const sortStrings = (arr) =>
+  [...arr].sort((a, b) =>
+    a.trim().toLowerCase().localeCompare(b.trim().toLowerCase())
   );
 
-  const gps = form.block
-    ? Object.keys(locationMaster[form.block]).sort((a, b) =>
-        a.localeCompare(b)
-      )
-    : [];
+ 
+const blocks = sortStrings(Object.keys(locationMaster));
 
-  const villages =
-    form.block === "Athagarh NAC"
-      ? form.wardNo
-        ? [...locationMaster[form.block][form.wardNo]].sort((a, b) =>
-            a.localeCompare(b)
-          )
-        : []
-      : form.block
-      ? Object.keys(locationMaster[form.block][form.gp] || {}).sort(
-          (a, b) => a.localeCompare(b)
-        )
-      : [];
+const gps = form.block
+  ? sortStrings(Object.keys(locationMaster[form.block]))
+  : [];
+
+const villages =
+  form.block === "Athagarh NAC"
+    ? form.wardNo
+      ? sortStrings(locationMaster[form.block][form.wardNo])
+      : []
+    : form.block
+    ? sortStrings(Object.keys(locationMaster[form.block][form.gp] || {}))
+    : [];
 
  const wards =
   form.block === "Athagarh NAC"
