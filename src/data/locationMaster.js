@@ -4,7 +4,7 @@ const wards = [
   "21","22","23","24","25","26","27","28","29","30"
 ];
 const locationMaster = {
- ATHGARH: {
+ Athgarh: {
     Dhaipur: {
     Dhaipur: wards,
     Gadadhapur: wards,
@@ -431,7 +431,7 @@ const locationMaster = {
     
   },
 
- "Tangi Chowdwar": {
+ "Tangi Chowduar": {
 
     "Kakhadi": {
       "Bidyadharpur": wards,
