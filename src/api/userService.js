@@ -1,8 +1,25 @@
-const BASE_URL = "https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod";
+const BASE_URL = " https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod";
+const handleAuthError = async (response) => {
+  if (response.status === 401) {
+    try {
+      const data = await response.json();
+
+      if (data.error === "TOKEN_EXPIRED") {
+        localStorage.removeItem("token");
+        alert("Session expired. Please login again.");
+        window.location.href = "/login";
+      }
+    } catch (e) {
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
+  }
+};
 // https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod
 // http://localhost:8080/api
 
 // ================= LOGIN =================
+
 export const loginUser = async (payload) => {
   const response = await fetch(`${BASE_URL}/auth/login`, {
     method: "POST",
@@ -15,6 +32,7 @@ export const loginUser = async (payload) => {
   const data = await response.json();
 
   if (!response.ok) {
+    await handleAuthError(response);
     throw new Error(data.message || "Login failed");
   }
 
