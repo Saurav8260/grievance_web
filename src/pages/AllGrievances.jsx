@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import GrievanceTable from "../components/GrievanceTable";
-import { fetchGrievances, exportGrievances } from "../api/userService";
+import { fetchGrievances, exportGrievances, deleteGrievances } from "../api/userService";
 import { useTableFilter } from "../hooks/useTableFilter";
 import Pagination from "../components/Pagination";
 
@@ -91,6 +91,33 @@ useEffect(() => {
     }
   };
 
+  const handleDelete = async () => {
+    if (selectedIds.length === 0) {
+      alert("Please select at least one grievance.");
+      return;
+    }
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete selected grievances?",
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await deleteGrievances(selectedIds);
+
+      alert("Deleted successfully");
+
+      // reload current page data
+      loadAllGrievances(page);
+
+      setSelectedIds([]);
+    } catch (err) {
+      console.error("Delete failed", err);
+      alert("Delete failed");
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-72">
@@ -101,18 +128,17 @@ useEffect(() => {
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen max-w-screen-xl mx-auto">
-
       <h1 className="text-2xl font-bold text-gray-800 mb-4">
         All Grievance Details
       </h1>
-      
 
       {/* FILTERS — untouched */}
       <div className="bg-white rounded-xl shadow p-5 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 items-end">
-
           <div>
-            <label className="text-xs font-semibold text-gray-600">Citizen Name</label>
+            <label className="text-xs font-semibold text-gray-600">
+              Citizen Name
+            </label>
             <input
               value={filters.name || ""}
               onChange={(e) => setFilters({ ...filters, name: e.target.value })}
@@ -122,7 +148,9 @@ useEffect(() => {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-gray-600">Mobile Number</label>
+            <label className="text-xs font-semibold text-gray-600">
+              Mobile Number
+            </label>
             <input
               value={filters.contact || ""}
               onChange={(e) =>
@@ -134,7 +162,9 @@ useEffect(() => {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-gray-600">Ward No</label>
+            <label className="text-xs font-semibold text-gray-600">
+              Ward No
+            </label>
             <input
               value={filters.ward || ""}
               onChange={(e) => setFilters({ ...filters, ward: e.target.value })}
@@ -154,7 +184,9 @@ useEffect(() => {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-gray-600">Father / Spouse</label>
+            <label className="text-xs font-semibold text-gray-600">
+              Father / Spouse
+            </label>
             <input
               value={filters.fatherSpouseName || ""}
               onChange={(e) =>
@@ -166,7 +198,9 @@ useEffect(() => {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-gray-600">Date From</label>
+            <label className="text-xs font-semibold text-gray-600">
+              Date From
+            </label>
             <input
               type="date"
               value={filters.startDate || ""}
@@ -178,7 +212,9 @@ useEffect(() => {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-gray-600">Date To</label>
+            <label className="text-xs font-semibold text-gray-600">
+              Date To
+            </label>
             <input
               type="date"
               value={filters.endDate || ""}
@@ -202,7 +238,9 @@ useEffect(() => {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-gray-600">Status</label>
+            <label className="text-xs font-semibold text-gray-600">
+              Status
+            </label>
             <select
               value={filters.status || ""}
               onChange={(e) =>
@@ -221,9 +259,7 @@ useEffect(() => {
 
           <select
             value={filters.block || ""}
-            onChange={(e) =>
-              setFilters({ ...filters, block: e.target.value })
-            }
+            onChange={(e) => setFilters({ ...filters, block: e.target.value })}
             className="h-10 w-full rounded-md border px-3 text-sm"
           >
             <option value="">All Blocks</option>
@@ -258,6 +294,17 @@ useEffect(() => {
           className="px-4 py-2 bg-green-600 text-white rounded-md text-sm"
         >
           Export Excel
+        </button>
+        <button
+          onClick={handleDelete}
+          disabled={selectedIds.length === 0}
+          className={`px-4 py-2 rounded-md text-sm text-white ${
+            selectedIds.length === 0
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-red-600 hover:bg-red-700"
+          }`}
+        >
+          Delete Selected
         </button>
 
         {/* <button

@@ -1,4 +1,4 @@
-const BASE_URL = " https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod";
+const BASE_URL = "https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod";
 const handleAuthError = async (response) => {
   if (response.status === 401) {
     try {
@@ -231,6 +231,30 @@ export const patchUserStatus = async (userId, activate) => {
   return response.json();
 };
 
+// ================= UPDATE USER (PASSWORD CHANGE INCLUDED) =================
+export const updateUser = async (userId, payload) => {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(
+    `${BASE_URL}/users/${userId}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    }
+  );
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "User update failed");
+  }
+
+  return response.json();
+};
+
 // ================= GET ALL GRIEVANCES =================
 
 export const fetchGrievances = async (page = 0, size = 20) => {
@@ -284,6 +308,28 @@ export const createGrievance = async (data) => {
   });
 
   return res.json();
+};
+
+// ================= DELETE GRIEVANCES =================
+export const deleteGrievances = async (grievanceIds) => {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${BASE_URL}/grievances`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(grievanceIds),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText || "Failed to delete grievances");
+  }
+
+  
+  return true;
 };
 
 // ================= UPLOAD ATTACHMENTS =================

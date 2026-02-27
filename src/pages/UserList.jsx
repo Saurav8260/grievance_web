@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { getAllUsers, patchUserStatus, createUser } from "../api/userService";
+import {
+  getAllUsers,
+  patchUserStatus,
+  createUser,
+  updateUser,
+} from "../api/userService";
 
 export default function UserList() {
   const [users, setUsers] = useState([]);
@@ -35,6 +40,11 @@ export default function UserList() {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+  const [passwordUser, setPasswordUser] = useState(null);
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+  });
 
   // const handleSubmit = async (e) => {
   //   e.preventDefault();
@@ -49,18 +59,16 @@ export default function UserList() {
   // };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    await createUser({ newPassword: form.newPassword });
-    alert("Agent created successfully");
-    setShowModal(false);
-    fetchUsers();
-  } catch (err) {
-    alert(err.message || "Failed to create agent");
-  }
-};
-
-
+    e.preventDefault();
+    try {
+      await createUser({ newPassword: form.newPassword });
+      alert("Agent created successfully");
+      setShowModal(false);
+      fetchUsers();
+    } catch (err) {
+      alert(err.message || "Failed to create agent");
+    }
+  };
 
   if (loading)
     return (
@@ -98,6 +106,7 @@ export default function UserList() {
                 <th className="px-6 py-4 text-left">Contact</th>
                 <th className="px-6 py-4 text-left">Role</th>
                 <th className="px-6 py-4 text-left">Status</th>
+                <th className="px-6 py-4 text-left">Actions</th>
               </tr>
             </thead>
 
@@ -117,6 +126,14 @@ export default function UserList() {
                       }`}
                     >
                       {u.isActive ? "Active" : "Inactive"}
+                    </button>
+                  </td>
+                  <td className="px-6 py-4">
+                    <button
+                      onClick={() => setPasswordUser(u)}
+                      className="px-3 py-1 bg-blue-500 text-white rounded text-xs"
+                    >
+                      Change Password
                     </button>
                   </td>
                 </tr>
@@ -206,15 +223,14 @@ export default function UserList() {
                 className="w-full px-4 py-2 border rounded"
                 required
               /> */}
-<input
-  type="password"
-  placeholder="Set Agent Password"
-  value={form.newPassword}
-  onChange={(e) => setForm({ newPassword: e.target.value })}
-  className="w-full px-4 py-2 border rounded"
-  required
-/>
-
+              <input
+                type="password"
+                placeholder="Set Agent Password"
+                value={form.newPassword}
+                onChange={(e) => setForm({ newPassword: e.target.value })}
+                className="w-full px-4 py-2 border rounded"
+                required
+              />
 
               {/* <select
                 name="role"
@@ -244,6 +260,81 @@ export default function UserList() {
               </button>
             </div>
           </form>
+        </div>
+      )}
+      {passwordUser && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-sm">
+            <h3 className="text-lg font-semibold mb-4">
+              Change Password - {passwordUser.name}
+            </h3>
+
+            <input
+              type="password"
+              placeholder="Current Password"
+              value={passwordForm.currentPassword}
+              onChange={(e) =>
+                setPasswordForm({
+                  ...passwordForm,
+                  currentPassword: e.target.value,
+                })
+              }
+              className="w-full px-4 py-2 border rounded mb-3"
+            />
+
+            <input
+              type="password"
+              placeholder="New Password"
+              value={passwordForm.newPassword}
+              onChange={(e) =>
+                setPasswordForm({
+                  ...passwordForm,
+                  newPassword: e.target.value,
+                })
+              }
+              className="w-full px-4 py-2 border rounded mb-4"
+            />
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setPasswordUser(null)}
+                className="px-4 py-2 border rounded"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={async () => {
+                  try {
+                    // 🔥 Hardcode contact if role is AGENT
+                    const updatedContact =
+                      passwordUser.role === "AGENT"
+                        ? "9999999999" // 👈 your hardcoded contact
+                        : passwordUser.contact;
+
+                    await updateUser(passwordUser.id, {
+                      name: passwordUser.name,
+                      role: passwordUser.role,
+                      isActive: passwordUser.isActive,
+                      gpAssigned: passwordUser.gpAssigned,
+                      contact: updatedContact,
+                      currentPassword: passwordForm.currentPassword,
+                      newPassword: passwordForm.newPassword,
+                    });
+
+                    alert("Password updated successfully!");
+                    setPasswordUser(null);
+                    setPasswordForm({ currentPassword: "", newPassword: "" });
+                  } catch (err) {
+                    alert(err.message || "Password update failed");
+                  }
+                }}
+                className="px-4 py-2 bg-blue-600 text-white rounded"
+              >
+                Update
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
