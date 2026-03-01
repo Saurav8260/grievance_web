@@ -6,7 +6,9 @@ const handleAuthError = async (response) => {
 
       if (data.error === "TOKEN_EXPIRED") {
         localStorage.removeItem("token");
+
         alert("Session expired. Please login again.");
+
         window.location.href = "/login";
       }
     } catch (e) {
@@ -31,10 +33,15 @@ export const loginUser = async (payload) => {
 
   const data = await response.json();
 
+  // if (!response.ok) {
+  //   await handleAuthError(response);
+  //   throw new Error(data.message || "Login failed");
+  // }
+
   if (!response.ok) {
-    await handleAuthError(response);
-    throw new Error(data.message || "Login failed");
-  }
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
 
   return data;
 };
@@ -55,7 +62,12 @@ export const createUser = async (payload) => {
   });
 
   const data = await response.json();
-  if (!response.ok) throw new Error(data.message || "User creation failed");
+  // if (!response.ok) throw new Error(data.message || "User creation failed");
+
+  if (!response.ok) {
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
 
   return data;
 };
@@ -72,11 +84,14 @@ export const getAllUsers = async () => {
     },
   });
 
+  // if (!response.ok) {
+  //   const errorText = await response.text();
+  //   throw new Error(errorText || "Failed to fetch users");
+  // }
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || "Failed to fetch users");
-  }
-
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
   const data = await response.json();   
   console.log("USERS DATA:", data);     
   return data;
@@ -97,10 +112,15 @@ export const getUserById = async (id) => {
 
   console.log("Response from user id API:", res);
 
+  // if (!res.ok) {
+  //   const err = await res.text();
+  //   throw new Error(err);
+  // }
+
   if (!res.ok) {
-    const err = await res.text();
-    throw new Error(err);
-  }
+  await handleAuthError(res);
+  throw new Error("Request failed");
+}
 
   return res.json();
 };
@@ -118,9 +138,13 @@ export const getMyProfile = async (token) => {
 
   const data = await response.json();
 
+  // if (!response.ok) {
+  //   throw new Error(data.message || "Failed to fetch profile");
+  // }
   if (!response.ok) {
-    throw new Error(data.message || "Failed to fetch profile");
-  }
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
 
   return data;
 };
@@ -132,9 +156,15 @@ export const getDashboardStats = async () => {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  if (!res.ok) throw new Error("Failed to load stats");
+  // if (!res.ok) throw new Error("Failed to load stats");
+  if (!res.ok) {
+  await handleAuthError(res);
+  throw new Error("Request failed");
+}
   return await res.json();
 };
+
+
 
 // ================= GET ALL GRIEVANCES =================
 
@@ -145,8 +175,12 @@ export const  getAllGrievances   = async () => {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  if (!res.ok) throw new Error("Failed to load grievances");
-  return await res.json();
+  // if (!res.ok) throw new Error("Failed to load grievances");
+  // return await res.json();
+  if (!response.ok) {
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
 };
 //===============GET GRIVENCE DATA BY ID===============
 export const getGrievanceById = async (id) => {
@@ -158,7 +192,11 @@ export const getGrievanceById = async (id) => {
     },
   });
 
-  if (!res.ok) throw new Error("Failed to fetch grievance");
+  // if (!res.ok) throw new Error("Failed to fetch grievance");
+  if (!res.ok) {
+  await handleAuthError(res);
+  throw new Error("Request failed");
+}
 
   return res.json();
 };
@@ -200,10 +238,14 @@ export const updateGrievance = async (id, payload) => {
   });
   
 
+  // if (!response.ok) {
+  //   const errorText = await response.text();
+  //   throw new Error(errorText);
+  // }
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText);
-  }
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
 
   return response.json();
 };
@@ -223,11 +265,14 @@ export const patchUserStatus = async (userId, activate) => {
     }
   );
 
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || "Failed to update user status");
-  }
-
+  // if (!response.ok) {
+  //   const text = await response.text();
+  //   throw new Error(text || "Failed to update user status");
+  // }
+ if (!response.ok) {
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
   return response.json();
 };
 
@@ -247,10 +292,14 @@ export const updateUser = async (userId, payload) => {
     }
   );
 
+  // if (!response.ok) {
+  //   const errorData = await response.json();
+  //   throw new Error(errorData.message || "User update failed");
+  // }
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "User update failed");
-  }
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
 
   return response.json();
 };
@@ -269,7 +318,12 @@ export const fetchGrievances = async (page = 0, size = 20) => {
     }
   );
 
-  if (!response.ok) throw new Error("Failed to fetch grievances");
+  // if (!response.ok) throw new Error("Failed to fetch grievances");
+
+  if (!response.ok) {
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
   return response.json();
 };
 
@@ -285,10 +339,15 @@ export const getGrievanceFilter = async (query) => {
     },
   });
 
+  // if (!response.ok) {
+  //   const error = await response.text();
+  //   throw new Error(error || "Failed to fetch grievances");
+  // }
+
   if (!response.ok) {
-    const error = await response.text();
-    throw new Error(error || "Failed to fetch grievances");
-  }
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
 
   return response.json();
 };
@@ -323,10 +382,14 @@ export const deleteGrievances = async (grievanceIds) => {
     body: JSON.stringify(grievanceIds),
   });
 
+  // if (!response.ok) {
+  //   const errorText = await response.text();
+  //   throw new Error(errorText || "Failed to delete grievances");
+  // }
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || "Failed to delete grievances");
-  }
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
 
   
   return true;
@@ -425,10 +488,15 @@ export const exportGrievances = async (grievanceIds, format) => {
     }),
   });
 
+  // if (!response.ok) {
+  //   const errorText = await response.text();
+  //   throw new Error(errorText || "Export failed");
+  // }
+
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || "Export failed");
-  }
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
 
   // 👇 IMPORTANT: convert response to blob
   const blob = await response.blob();
