@@ -483,6 +483,9 @@ export const exportGrievances = async (grievanceIds, format) => {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+
+      // ✅ ADDED THIS LINE
+      Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     },
     body: JSON.stringify({
       grievanceIds,
@@ -490,19 +493,11 @@ export const exportGrievances = async (grievanceIds, format) => {
     }),
   });
 
-  // if (!response.ok) {
-  //   const errorText = await response.text();
-  //   throw new Error(errorText || "Export failed");
-  // }
-
   if (!response.ok) {
-  await handleAuthError(response);
-  throw new Error("Request failed");
-}
+    await handleAuthError(response);
+    throw new Error("Request failed");
+  }
 
-  // 👇 IMPORTANT: convert response to blob
   const blob = await response.blob();
-
   return blob;
 };
-
