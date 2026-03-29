@@ -7,6 +7,12 @@ export default function UserDetails() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // ✅ Added states
+  const [showPasswordBox, setShowPasswordBox] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   useEffect(() => {
     fetchUser();
   }, []);
@@ -19,6 +25,44 @@ export default function UserDetails() {
       console.error(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // ✅ Added function
+  const handleChangePassword = async () => {
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      alert("All fields are required");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    try {
+      const userId = JSON.parse(localStorage.getItem("id"));
+
+      await fetch(`/api/users/${userId}/change-password`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          currentPassword,
+          newPassword,
+        }),
+      });
+
+      alert("Password updated successfully");
+
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setShowPasswordBox(false);
+    } catch (err) {
+      alert("Failed to update password");
     }
   };
 
@@ -65,6 +109,58 @@ export default function UserDetails() {
             </span>
           </div>
         </div>
+
+        {/* ✅ ADDED ONLY THIS SECTION */}
+        <div className="mt-8">
+          <div className="flex justify-between items-center border-t pt-4">
+            <h3 className="text-lg font-semibold">Change Password</h3>
+
+            <button
+              onClick={() => setShowPasswordBox(!showPasswordBox)}
+              className="text-blue-600 text-sm font-medium hover:underline"
+            >
+              {showPasswordBox ? "Cancel" : "Change"}
+            </button>
+          </div>
+
+          {showPasswordBox && (
+            <div className="mt-4 space-y-3">
+              <input
+                type="password"
+                placeholder="Current Password"
+                className="w-full border rounded-lg px-3 py-2"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+              />
+
+              <input
+                type="password"
+                placeholder="New Password"
+                className="w-full border rounded-lg px-3 py-2"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                className="w-full border rounded-lg px-3 py-2"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+
+              <div className="flex justify-end">
+                <button
+                  onClick={handleChangePassword}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                >
+                  Update Password
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
       </div>
     </div>
   );
