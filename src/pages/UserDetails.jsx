@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getUserById } from "../api/userService";
+import { getUserById, updateUser } from "../api/userService";
 
 export default function UserDetails() {
   const { id } = useParams();
@@ -28,7 +28,7 @@ export default function UserDetails() {
     }
   };
 
-  // ✅ Added function
+  // ✅ UPDATED PASSWORD FUNCTION (same as UserList)
   const handleChangePassword = async () => {
     if (!currentPassword || !newPassword || !confirmPassword) {
       alert("All fields are required");
@@ -43,26 +43,26 @@ export default function UserDetails() {
     try {
       const userId = JSON.parse(localStorage.getItem("id"));
 
-      await fetch(`/api/users/${userId}/change-password`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          currentPassword,
-          newPassword,
-        }),
+      // 🔥 SAME LOGIC AS USER LIST
+      await updateUser(userId, {
+        name: user.name,
+        role: user.role,
+        isActive: user.isActive,
+        gpAssigned: user.gpAssigned,
+        contact: user.contact,
+
+        currentPassword: currentPassword,
+        newPassword: newPassword,
       });
 
-      alert("Password updated successfully");
+      alert("Password updated successfully!");
 
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
       setShowPasswordBox(false);
     } catch (err) {
-      alert("Failed to update password");
+      alert(err.message || "Password update failed");
     }
   };
 
@@ -110,11 +110,8 @@ export default function UserDetails() {
           </div>
         </div>
 
-        {/* ✅ ADDED ONLY THIS SECTION */}
         <div className="mt-8">
-          <div className="flex justify-between items-center  pt-4">
-            {/* <h3 className="text-lg font-semibold">Change Password</h3> */}
-
+          <div className="flex justify-between items-center pt-4">
             <button
               onClick={() => setShowPasswordBox(!showPasswordBox)}
               className="text-blue-600 text-bold font-medium hover:underline"
