@@ -112,14 +112,14 @@ export default function UserDetails() {
 
         {/* ✅ ADDED ONLY THIS SECTION */}
         <div className="mt-8">
-          <div className="flex justify-between items-center border-t pt-4">
-            <h3 className="text-lg font-semibold">Change Password</h3>
+          <div className="flex justify-between items-center  pt-4">
+            {/* <h3 className="text-lg font-semibold">Change Password</h3> */}
 
             <button
               onClick={() => setShowPasswordBox(!showPasswordBox)}
-              className="text-blue-600 text-sm font-medium hover:underline"
+              className="text-blue-600 text-bold font-medium hover:underline"
             >
-              {showPasswordBox ? "Cancel" : "Change"}
+              {showPasswordBox ? "Cancel" : "Change Password"}
             </button>
           </div>
 
