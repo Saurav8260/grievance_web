@@ -1,18 +1,20 @@
-const BASE_URL = "https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod";
+const BASE_URL = "http://localhost:8080/api";
 const handleAuthError = async (response) => {
   if (response.status === 401) {
     try {
       const data = await response.json();
 
-      if (data.error === "TOKEN_EXPIRED") {
-        localStorage.removeItem("token");
+      // ✅ EXACT YOUR RESPONSE HANDLE
+      if (data?.error === "TOKEN_EXPIRED") {
+        localStorage.clear();
 
-        alert("Session expired. Please login again.");
+        alert(data.message || "Session expired. Please login again.");
 
         window.location.href = "/login";
       }
     } catch (e) {
-      localStorage.removeItem("token");
+      // fallback
+      localStorage.clear();
       window.location.href = "/login";
     }
   }
@@ -45,7 +47,7 @@ export const loginUser = async (payload) => {
 
   return data;
 };
-console
+
 
 
 // ================= CREATE USER =================
