@@ -2,6 +2,33 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getGrievanceById } from "../api/userService";
 
+// ✅ ONLY ADDED THIS FUNCTION
+function formatIndianDate(dateStr) {
+  if (!dateStr) return "-";
+
+  const parts = dateStr.split(" ");
+  if (parts.length < 3) return dateStr;
+
+  const [datePart, timePart, period] = parts;
+  const [day, month, year] = datePart.split("-");
+
+  let [hours, minutes] = timePart.split(":");
+  hours = parseInt(hours);
+
+  if (period === "PM" && hours !== 12) hours += 12;
+  if (period === "AM" && hours === 12) hours = 0;
+
+  const formatted = new Date(year, month - 1, day, hours, minutes);
+
+  return formatted.toLocaleString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 export default function GrievanceDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -118,14 +145,14 @@ export default function GrievanceDetails() {
           <div>
             <p className="text-gray-500">Created At</p>
             <p className="font-medium">
-              {new Date(grievance.createdAt).toLocaleString()}
+              {formatIndianDate(grievance.createdAt)}
             </p>
           </div>
 
           <div>
             <p className="text-gray-500">Last Updated</p>
             <p className="font-medium">
-              {new Date(grievance.updatedAt).toLocaleString()}
+              {formatIndianDate(grievance.updatedAt)}
             </p>
           </div>
 
@@ -160,15 +187,21 @@ export default function GrievanceDetails() {
             <div className="bg-gray-50 rounded-lg p-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
               <div>
                 <p className="text-gray-500">Name</p>
-                <p className="font-semibold">{grievance.collectedBy.name}</p>
+                <p className="font-semibold">
+                  {grievance.collectedBy.name}
+                </p>
               </div>
               <div>
                 <p className="text-gray-500">Contact</p>
-                <p className="font-semibold">{grievance.collectedBy.contact}</p>
+                <p className="font-semibold">
+                  {grievance.collectedBy.contact}
+                </p>
               </div>
               <div>
                 <p className="text-gray-500">Role</p>
-                <p className="font-semibold">{grievance.collectedBy.role}</p>
+                <p className="font-semibold">
+                  {grievance.collectedBy.role}
+                </p>
               </div>
             </div>
           ) : (
@@ -177,62 +210,62 @@ export default function GrievanceDetails() {
         </div>
 
         {/* Attachments */}
-       <div className="border-t px-6 py-4">
-  <h3 className="text-sm font-semibold text-gray-700 mb-3">
-    Attachments
-  </h3>
+        <div className="border-t px-6 py-4">
+          <h3 className="text-sm font-semibold text-gray-700 mb-3">
+            Attachments
+          </h3>
 
-  {Array.isArray(grievance.attachments) &&
-  grievance.attachments.length > 0 ? (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-      {grievance.attachments.map((file, index) => {
-        // 🔥 Build proper file URL
-        const fileUrl =
-          file.s3Url ||
-          `http://localhost:8080/uploads/${file.fileName || file}`;
+          {Array.isArray(grievance.attachments) &&
+          grievance.attachments.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {grievance.attachments.map((file, index) => {
+                const fileUrl =
+                  file.s3Url ||
+                  `http://localhost:8080/uploads/${
+                    file.fileName || file
+                  }`;
 
-        const isImage =
-          file?.fileType?.startsWith("image") ||
-          fileUrl.match(/\.(jpg|jpeg|png|gif)$/i);
+                const isImage =
+                  file?.fileType?.startsWith("image") ||
+                  fileUrl.match(/\.(jpg|jpeg|png|gif)$/i);
 
-        return (
-          <a
-            key={file.attachmentId || index}
-            href={fileUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="border rounded-lg overflow-hidden hover:shadow transition"
-          >
-            {isImage && (
-              <img
-                src={fileUrl}
-                alt={file.fileName || "attachment"}
-                className="w-full h-40 object-cover"
-              />
-            )}
+                return (
+                  <a
+                    key={file.attachmentId || index}
+                    href={fileUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="border rounded-lg overflow-hidden hover:shadow transition"
+                  >
+                    {isImage && (
+                      <img
+                        src={fileUrl}
+                        alt={file.fileName || "attachment"}
+                        className="w-full h-40 object-cover"
+                      />
+                    )}
 
-            <div className="p-2 text-xs">
-              <p className="font-semibold truncate">
-                {file.fileName || file}
-              </p>
+                    <div className="p-2 text-xs">
+                      <p className="font-semibold truncate">
+                        {file.fileName || file}
+                      </p>
 
-              {file.fileSize && (
-                <p className="text-gray-500">
-                  {(file.fileSize / 1024).toFixed(1)} KB
-                </p>
-              )}
+                      {file.fileSize && (
+                        <p className="text-gray-500">
+                          {(file.fileSize / 1024).toFixed(1)} KB
+                        </p>
+                      )}
+                    </div>
+                  </a>
+                );
+              })}
             </div>
-          </a>
-        );
-      })}
-    </div>
-  ) : (
-    <p className="text-gray-500 text-sm">
-      No attachments available
-    </p>
-  )}
-</div>
-
+          ) : (
+            <p className="text-gray-500 text-sm">
+              No attachments available
+            </p>
+          )}
+        </div>
 
         <div className="bg-gray-50 px-6 py-3 text-right text-xs text-gray-500">
           Last updated automatically from central grievance system
