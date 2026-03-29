@@ -20,13 +20,15 @@ function formatIndianDate(dateStr) {
 
   const formatted = new Date(year, month - 1, day, hours, minutes);
 
-  return formatted.toLocaleString("en-IN", {
+ let result = formatted.toLocaleString("en-IN", {
     day: "2-digit",
     month: "short",
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
   });
+
+  return result.replace("am", "AM").replace("pm", "PM");
 }
 
 export default function GrievanceDetails() {
