@@ -475,7 +475,7 @@ export const uploadAttachments = async (files, grievanceId) => {
 };
 
 // ================= EXPORT GRIEVANCES (EXCEL / CSV / PDF) =================
-export const exportGrievances = async (grievanceIds, format) => {
+export const exportGrievances = async (grievanceIds) => {
   const token = localStorage.getItem("token");
 
   const response = await fetch(`${BASE_URL}/grievances/export`, {
@@ -484,12 +484,13 @@ export const exportGrievances = async (grievanceIds, format) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
 
-      // ✅ ADDED THIS LINE
-      Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      // ✅ Always Excel
+      Accept:
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     },
     body: JSON.stringify({
       grievanceIds,
-      format, // "EXCEL" | "CSV" | "PDF"
+      format: "EXCEL", // ✅ fixed
     }),
   });
 

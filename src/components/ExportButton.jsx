@@ -5,12 +5,18 @@ export default function ExportButton({ selectedIds }) {
   const [loading, setLoading] = useState(false);
 
   const handleExport = async (format) => {
+    // ✅ Prevent empty selection
+    if (!selectedIds || selectedIds.length === 0) {
+      alert("Please select at least one item");
+      return;
+    }
+
     try {
       setLoading(true);
 
       const blob = await exportGrievances(selectedIds, format);
 
-      let fileName = "grievances";
+      let fileName = `grievances_${Date.now()}`;
 
       if (format === "EXCEL") fileName += ".xlsx";
       if (format === "CSV") fileName += ".csv";
@@ -26,10 +32,15 @@ export default function ExportButton({ selectedIds }) {
       link.click();
 
       link.remove();
-      window.URL.revokeObjectURL(url);
+
+      // ✅ Clean memory
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+      }, 100);
 
     } catch (error) {
-      alert(error.message);
+      console.error(error);
+      alert("Export failed");
     } finally {
       setLoading(false);
     }
