@@ -4,8 +4,7 @@ import { exportGrievances } from "../api/userService";
 export default function ExportButton({ selectedIds }) {
   const [loading, setLoading] = useState(false);
 
-  const handleExport = async (format) => {
-    // ✅ Prevent empty selection
+  const handleExport = async () => {
     if (!selectedIds || selectedIds.length === 0) {
       alert("Please select at least one item");
       return;
@@ -14,13 +13,10 @@ export default function ExportButton({ selectedIds }) {
     try {
       setLoading(true);
 
-      const blob = await exportGrievances(selectedIds, format);
+      const blob = await exportGrievances(selectedIds);
 
-      let fileName = `grievances_${Date.now()}`;
-
-      if (format === "EXCEL") fileName += ".xlsx";
-      if (format === "CSV") fileName += ".csv";
-      if (format === "PDF") fileName += ".pdf";
+      // ✅ ALWAYS EXCEL
+      const fileName = `grievances_${Date.now()}.xlsx`;
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -33,7 +29,6 @@ export default function ExportButton({ selectedIds }) {
 
       link.remove();
 
-      // ✅ Clean memory
       setTimeout(() => {
         window.URL.revokeObjectURL(url);
       }, 100);
@@ -47,29 +42,13 @@ export default function ExportButton({ selectedIds }) {
   };
 
   return (
-    <div className="flex gap-3 mb-4">
+    <div className="mb-4">
       <button
-        onClick={() => handleExport("EXCEL")}
+        onClick={handleExport}
         disabled={loading}
         className="bg-green-600 text-white px-4 py-2 rounded"
       >
         {loading ? "Exporting..." : "Export Excel"}
-      </button>
-
-      <button
-        onClick={() => handleExport("CSV")}
-        disabled={loading}
-        className="bg-blue-600 text-white px-4 py-2 rounded"
-      >
-        {loading ? "Exporting..." : "Export CSV"}
-      </button>
-
-      <button
-        onClick={() => handleExport("PDF")}
-        disabled={loading}
-        className="bg-red-600 text-white px-4 py-2 rounded"
-      >
-        {loading ? "Exporting..." : "Export PDF"}
       </button>
     </div>
   );

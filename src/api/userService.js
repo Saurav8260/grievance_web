@@ -483,22 +483,18 @@ export const exportGrievances = async (grievanceIds) => {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
-
-      // ✅ Always Excel
       Accept:
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     },
     body: JSON.stringify({
       grievanceIds,
-      format: "EXCEL", // ✅ fixed
+      format: "EXCEL",
     }),
   });
 
-  if (!response.ok) {
-    await handleAuthError(response);
-    throw new Error("Request failed");
-  }
-
   const blob = await response.blob();
-  return blob;
+
+  return new Blob([blob], {
+    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  });
 };
