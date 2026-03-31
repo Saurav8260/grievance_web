@@ -116,7 +116,7 @@ export default function UserDetails() {
               onClick={() => setShowPasswordBox(!showPasswordBox)}
               className="text-blue-600 text-bold font-medium hover:underline"
             >
-              {showPasswordBox ? "Cancel" : "Change Password"}
+              {showPasswordBox ? "Cancel" : "Reset Password"}
             </button>
           </div>
 

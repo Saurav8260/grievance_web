@@ -52,12 +52,12 @@ export default function Login() {
   return (
     <div
       className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-100"
-      style={{
-        backgroundImage: `url("/athagarh.jpeg")`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
+      // style={{
+      //   backgroundImage: `url("/Athgargh.jpg")`,
+      //   backgroundSize: "cover",
+      //   backgroundPosition: "center",
+      //   backgroundRepeat: "no-repeat",
+      // }}
     >
       {/* ONLY THIS DIV UPDATED */}
       <div className="w-full max-w-md rounded-3xl shadow-2xl p-10 bg-cover bg-center  relative overflow-hidden">

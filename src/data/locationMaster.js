@@ -244,7 +244,8 @@ const locationMaster = {
     Radhakrushnapur: wards,
     Rahangol: wards,
     Khanduali: wards,
-    Saraswatipur: wards
+    Saraswatipur: wards,
+    Musulia: wards
   },
    Kandarei: {
     Kandarei: wards,

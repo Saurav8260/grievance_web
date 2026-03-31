@@ -651,8 +651,9 @@ const villages =
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white w-[450px] max-h-[90vh] rounded-xl p-6 overflow-y-auto">
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 ">
+      <div className="bg-white w-[450px] max-h-[90vh] rounded-xl p-6 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none]
+   [&::-webkit-scrollbar]:hidden">
 
         <h2 className="text-lg font-semibold text-center mb-4 text-white bg-blue-700 py-2 rounded-lg">
           Create New Grievance
