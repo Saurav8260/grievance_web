@@ -1,4 +1,4 @@
-const BASE_URL = " https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod";
+const BASE_URL = "https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod";
 const handleAuthError = async (response) => {
   if (response.status === 401) {
     try {
