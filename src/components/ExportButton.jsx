@@ -13,25 +13,22 @@ export default function ExportButton({ selectedIds }) {
     try {
       setLoading(true);
 
+      // ✅ USE YOUR SERVICE
       const blob = await exportGrievances(selectedIds);
 
-      // ✅ ALWAYS EXCEL
       const fileName = `grievances_${Date.now()}.xlsx`;
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
 
       link.href = url;
-      link.download = fileName;
+      link.setAttribute("download", fileName);
 
       document.body.appendChild(link);
       link.click();
-
       link.remove();
 
-      setTimeout(() => {
-        window.URL.revokeObjectURL(url);
-      }, 100);
+      window.URL.revokeObjectURL(url);
 
     } catch (error) {
       console.error(error);
