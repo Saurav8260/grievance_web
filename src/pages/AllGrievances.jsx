@@ -71,7 +71,7 @@ useEffect(() => {
 
       let fileName = `Grievance_Report_${Date.now()}`;
 
-      if (format === "EXCEL") fileName += ".csv";
+      if (format === "EXCEL") fileName += ".xlsx";
       // if (format === "PDF") fileName += ".pdf";
 
       const url = window.URL.createObjectURL(blob);
