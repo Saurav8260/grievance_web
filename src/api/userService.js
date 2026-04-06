@@ -79,7 +79,7 @@ export const createUser = async (payload) => {
 export const getAllUsers = async () => {
   const token = localStorage.getItem("token");
 
-  const response = await fetch(`${BASE_URL}/users`, {
+  const response = await fetch(`${BASE_URL}/users/agents`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
