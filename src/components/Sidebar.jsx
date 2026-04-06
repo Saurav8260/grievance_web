@@ -148,9 +148,9 @@ export default function Sidebar() {
         />
 
         <SidebarButton
-          onClick={() => navigate("/userdetails")}
+          onClick={() => navigate("/Agentdetails")}
           icon={<FiFileText />}
-          title="User Details"
+          title="Agent Details"
         />
 
         <SidebarButton

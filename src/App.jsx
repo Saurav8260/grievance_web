@@ -58,7 +58,7 @@ export default function App() {
           /> */}
 
           <Route
-            path="/userdetails"
+            path="/Agentdetails"
             element={
               <PrivateRoute>
                 <UserList />
