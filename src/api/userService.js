@@ -1,0 +1,500 @@
+const BASE_URL = "https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod";
+const handleAuthError = async (response) => {
+  if (response.status === 401) {
+    try {
+      const data = await response.json();
+
+      // ✅ EXACT YOUR RESPONSE HANDLE
+      if (data?.error === "TOKEN_EXPIRED") {
+        localStorage.clear();
+
+        alert(data.message || "Session expired. Please login again.");
+
+        window.location.href = "/login";
+      }
+    } catch (e) {
+      // fallback
+      localStorage.clear();
+      window.location.href = "/login";
+    }
+  }
+};
+// https://f1i32xtwg9.execute-api.ap-south-1.amazonaws.com/prod
+// http://localhost:8080/api
+
+// ================= LOGIN =================
+
+export const loginUser = async (payload) => {
+  const response = await fetch(`${BASE_URL}/auth/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+
+  // if (!response.ok) {
+  //   await handleAuthError(response);
+  //   throw new Error(data.message || "Login failed");
+  // }
+
+  if (!response.ok) {
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
+
+  return data;
+};
+
+
+
+// ================= CREATE USER =================
+export const createUser = async (payload) => {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${BASE_URL}/users/agent-signup`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+  // if (!response.ok) throw new Error(data.message || "User creation failed");
+
+  if (!response.ok) {
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
+
+  return data;
+};
+
+
+// ================= GET ALL USERS (ADMIN) =================
+export const getAllUsers = async () => {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${BASE_URL}/users/agents`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  // if (!response.ok) {
+  //   const errorText = await response.text();
+  //   throw new Error(errorText || "Failed to fetch users");
+  // }
+  if (!response.ok) {
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
+  const data = await response.json();   
+  console.log("USERS DATA:", data);     
+  return data;
+};
+
+// ================= GET USER BY ID =================
+
+export const getUserById = async (id) => {
+  console.log("idvalue",id)
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${BASE_URL}/users/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+
+  });
+
+  console.log("Response from user id API:", res);
+
+  // if (!res.ok) {
+  //   const err = await res.text();
+  //   throw new Error(err);
+  // }
+
+  if (!res.ok) {
+  await handleAuthError(res);
+  throw new Error("Request failed");
+}
+
+  return res.json();
+};
+
+// ================= GET LOGGED-IN USER PROFILE =================
+
+export const getMyProfile = async (token) => {
+  const response = await fetch(`${BASE_URL}/users/me`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  // if (!response.ok) {
+  //   throw new Error(data.message || "Failed to fetch profile");
+  // }
+  if (!response.ok) {
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
+
+  return data;
+};
+// ================= GET DASHBOARD STATS =================
+export const getDashboardStats = async () => {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${BASE_URL}/dashboard/admin`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  // if (!res.ok) throw new Error("Failed to load stats");
+  if (!res.ok) {
+  await handleAuthError(res);
+  throw new Error("Request failed");
+}
+  return await res.json();
+};
+
+
+
+// ================= GET ALL GRIEVANCES =================
+
+export const  getAllGrievances   = async () => {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${BASE_URL}/dashboard/admin`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  // if (!res.ok) throw new Error("Failed to load grievances");
+  // return await res.json();
+  if (!response.ok) {
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
+};
+//===============GET GRIVENCE DATA BY ID===============
+export const getGrievanceById = async (id) => {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${BASE_URL}/grievances/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  // if (!res.ok) throw new Error("Failed to fetch grievance");
+  if (!res.ok) {
+  await handleAuthError(res);
+  throw new Error("Request failed");
+}
+
+  return res.json();
+};
+
+// ================= UPDATE GRIEVANCE =================
+export const updateGrievance = async (id, payload) => {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${BASE_URL}/grievances/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      block: payload.block,
+      gp: payload.gp,
+      villageSahi: payload.villageSahi,
+      address: payload.address,
+      wardNo: payload.wardNo,
+      name: payload.name,
+      fatherSpouseName: payload.fatherSpouseName,
+      contact: payload.contact,
+      topic1: payload.topic1,
+      topic2: payload.topic2,
+      topic3: payload.topic3,
+      topic4: payload.topic4,
+      topic5: payload.topic5,
+      grievanceDetails: payload.grievanceDetails,
+      agentRemarks: payload.agentRemarks,
+      agentName: payload.agentName,
+      workGivenTo: payload.workGivenTo,
+      status: payload.status,
+      adminDate: payload.adminDate,
+      adminRemarks: payload.adminRemarks,
+      attachments: payload.attachments 
+
+    }),
+  });
+  
+
+  // if (!response.ok) {
+  //   const errorText = await response.text();
+  //   throw new Error(errorText);
+  // }
+  if (!response.ok) {
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
+
+  return response.json();
+};
+
+
+// ================= PATCH USER STATUS (ACTIVATE/DEACTIVATE) =================
+export const patchUserStatus = async (userId, activate) => {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(
+    `${BASE_URL}/users/${userId}/status?activate=${activate}`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  // if (!response.ok) {
+  //   const text = await response.text();
+  //   throw new Error(text || "Failed to update user status");
+  // }
+ if (!response.ok) {
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
+  return response.json();
+};
+
+// ================= UPDATE USER (PASSWORD CHANGE INCLUDED) =================
+export const updateUser = async (userId, payload) => {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(
+    `${BASE_URL}/users/${userId}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    }
+  );
+
+  // if (!response.ok) {
+  //   const errorData = await response.json();
+  //   throw new Error(errorData.message || "User update failed");
+  // }
+  if (!response.ok) {
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
+
+  return response.json();
+};
+
+// ================= GET ALL GRIEVANCES =================
+
+export const fetchGrievances = async (page = 0, size = 20) => {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(
+    `${BASE_URL}/grievances/all?page=${page}&size=${size}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  // if (!response.ok) throw new Error("Failed to fetch grievances");
+
+  if (!response.ok) {
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
+  return response.json();
+};
+
+// ================= GET GRIEVANCE LIST FOR ADMIN =================
+export const getGrievanceFilter = async (query) => {
+  const token = localStorage.getItem("token"); // or sessionStorage
+
+  const response = await fetch(`${BASE_URL}/grievances?${query}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,   // THIS WAS MISSING
+    },
+  });
+
+  // if (!response.ok) {
+  //   const error = await response.text();
+  //   throw new Error(error || "Failed to fetch grievances");
+  // }
+
+  if (!response.ok) {
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
+
+  return response.json();
+};
+
+
+// ================= CREATE GRIEVANCE =================
+export const createGrievance = async (data) => {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${BASE_URL}/grievances`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  return res.json();
+};
+
+// ================= DELETE GRIEVANCES =================
+export const deleteGrievances = async (grievanceIds) => {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${BASE_URL}/grievances`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(grievanceIds),
+  });
+
+  // if (!response.ok) {
+  //   const errorText = await response.text();
+  //   throw new Error(errorText || "Failed to delete grievances");
+  // }
+  if (!response.ok) {
+  await handleAuthError(response);
+  throw new Error("Request failed");
+}
+
+  
+  return true;
+};
+
+// ================= UPLOAD ATTACHMENTS =================
+export const uploadAttachments = async (files, grievanceId) => {
+  const token = localStorage.getItem("token");
+
+  const requestBody = {
+    grievanceId,
+    files: files.map((file) => ({
+      fileName: file.name,
+      contentType: file.type,
+      fileSize: file.size,
+      fileType: "OTHER",
+    })),
+  };
+
+  // 1️⃣ Get presigned URLs
+  const presignResponse = await fetch(
+    `${BASE_URL}/attachments/presigned-urls`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(requestBody),
+    }
+  );
+
+  if (!presignResponse.ok) {
+    throw new Error("Failed to get presigned URLs");
+  }
+
+  const presignData = await presignResponse.json();
+
+  // 2️⃣ Upload each file
+  for (let i = 0; i < presignData.uploads.length; i++) {
+    const uploadInfo = presignData.uploads[i];
+    const file = files[i];
+
+    // Upload to S3
+    const uploadResponse = await fetch(uploadInfo.presignedUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": file.type,
+      },
+      body: file,
+    });
+
+    if (!uploadResponse.ok) {
+      throw new Error("S3 Upload failed");
+    }
+
+    // Confirm upload
+    const confirmResponse = await fetch(
+      `${BASE_URL}/attachments/confirm?uploadId=${uploadInfo.uploadId}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!confirmResponse.ok) {
+      const text = await confirmResponse.text();
+      throw new Error("Confirm failed: " + text);
+    }
+
+    const confirmData = await confirmResponse.json();
+
+    if (!confirmData.uploaded) {
+      throw new Error("Upload not confirmed by backend");
+    }
+  }
+
+  return true;
+};
+
+// ================= EXPORT GRIEVANCES (EXCEL / CSV / PDF) =================
+export const exportGrievances = async (grievanceIds) => {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${BASE_URL}/grievances/export`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+      Accept:
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    },
+    body: JSON.stringify({
+      grievanceIds,
+      format: "EXCEL",
+    }),
+  });
+
+  const blob = await response.blob();
+
+  return new Blob([blob], {
+    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  });
+};
