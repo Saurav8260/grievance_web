@@ -49,7 +49,6 @@ export const loginUser = async (payload) => {
 };
 
 
-
 // ================= CREATE USER =================
 export const createUser = async (payload) => {
   const token = localStorage.getItem("token");
