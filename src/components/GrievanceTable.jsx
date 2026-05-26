@@ -5,12 +5,11 @@ function StatusBadge({ status }) {
   const normalized = status?.toLowerCase();
 
   const map = {
-    completed: "bg-green-100 text-green-800",
-    complete: "bg-green-100 text-green-800",
-    pending: "bg-yellow-100 text-yellow-800",
-    "not complete": "bg-red-100 text-red-800",
-    "not completed": "bg-red-100 text-red-800",
-    in_progress: "bg-blue-100 text-blue-800",
+    "completed": "bg-green-100 text-green-800",
+    "pending": "bg-yellow-100 text-yellow-800",
+    "rejected": "bg-red-100 text-red-800",
+   "in_progress": "bg-blue-100 text-blue-800",
+    "reopened": "bg-orange-100 text-orange-800",
   };
 
   const cls = map[normalized] || "bg-gray-100 text-gray-800";

@@ -686,7 +686,7 @@ export default function EditGrievance() {
                 className="input"
               >
                 <option value="PENDING">Pending</option>
-                <option value="Reopened">Reopened</option>
+                <option value="REOPENED">Reopened</option>
                 <option value="COMPLETED">Completed</option>
                 <option value="REJECTED">Rejected</option>
                 <option value="IN_PROGRESS">In Progress</option>  
