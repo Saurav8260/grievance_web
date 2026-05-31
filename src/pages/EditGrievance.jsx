@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, UNSAFE_createClientRoutesWithHMRRevalidationOptOut } from "react-router-dom";
-import { getGrievanceById, updateGrievance, uploadAttachments } from "../api/userService";
+import { getGrievanceById, updateGrievance, uploadAttachments,deleteAttachments } from "../api/userService";
 export default function EditGrievance() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -32,6 +32,7 @@ export default function EditGrievance() {
   });
 
   const [loading, setLoading] = useState(true);
+  const [selectedAttachments, setSelectedAttachments] = useState([]);
 
   // ✅ FIXED: Load attachments properly
   useEffect(() => {
@@ -57,6 +58,39 @@ export default function EditGrievance() {
       attachments: [...prev.attachments, ...newFiles], // 🔥 append instead of replace
     }));
   };
+ const handleSelectAttachment = (attachmentId) => {
+   setSelectedAttachments((prev) =>
+     prev.includes(attachmentId)
+       ? prev.filter((id) => id !== attachmentId)
+       : [...prev, attachmentId],
+   );
+ };
+  const handleDeleteSelected = async () => {
+  console.log("Selected IDs:", selectedAttachments);
+
+  if (selectedAttachments.length === 0) {
+    alert("Please select at least one attachment");
+    return;
+  }
+
+  try {
+    await deleteAttachments(selectedAttachments);
+
+    const updatedData = await getGrievanceById(id);
+
+    setForm({
+      ...updatedData,
+      attachments: updatedData.attachments || [],
+    });
+
+    setSelectedAttachments([]);
+
+    alert("Attachments deleted successfully");
+  } catch (error) {
+    console.error(error);
+    alert("Delete failed");
+  }
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -116,7 +150,6 @@ export default function EditGrievance() {
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
-
           {/* Citizen Details */}
           <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
             <div>
@@ -220,11 +253,41 @@ export default function EditGrievance() {
               Grievance Topics
             </h3>
             <div className="grid grid-cols-1 gap-3">
-              <input name="topic1" value={form.topic1} onChange={handleChange} placeholder="Topic 1" className="input" />
-              <input name="topic2" value={form.topic2} onChange={handleChange} placeholder="Topic 2" className="input" />
-              <input name="topic3" value={form.topic3} onChange={handleChange} placeholder="Topic 3" className="input" />
-              <input name="topic4" value={form.topic4} onChange={handleChange} placeholder="Topic 4" className="input" />
-              <input name="topic5" value={form.topic5} onChange={handleChange} placeholder="Topic 5" className="input" />
+              <input
+                name="topic1"
+                value={form.topic1}
+                onChange={handleChange}
+                placeholder="Topic 1"
+                className="input"
+              />
+              <input
+                name="topic2"
+                value={form.topic2}
+                onChange={handleChange}
+                placeholder="Topic 2"
+                className="input"
+              />
+              <input
+                name="topic3"
+                value={form.topic3}
+                onChange={handleChange}
+                placeholder="Topic 3"
+                className="input"
+              />
+              <input
+                name="topic4"
+                value={form.topic4}
+                onChange={handleChange}
+                placeholder="Topic 4"
+                className="input"
+              />
+              <input
+                name="topic5"
+                value={form.topic5}
+                onChange={handleChange}
+                placeholder="Topic 5"
+                className="input"
+              />
             </div>
           </div>
 
@@ -242,7 +305,7 @@ export default function EditGrievance() {
             />
           </div>
 
-           <div>
+          <div>
             <h3 className="text-gray-700 font-semibold mb-3">Assignment</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -253,7 +316,7 @@ export default function EditGrievance() {
                   name="agentName"
                   value={form.agentName}
                   className="input bg-gray-100 cursor-not-allowed"
-                  disabled 
+                  disabled
                 />
               </div>
 
@@ -285,7 +348,7 @@ export default function EditGrievance() {
                 <option value="REOPENED">Reopened</option>
                 <option value="COMPLETED">Completed</option>
                 <option value="REJECTED">Rejected</option>
-                <option value="IN_PROGRESS">In Progress</option>  
+                <option value="IN_PROGRESS">In Progress</option>
               </select>
             </div>
 
@@ -329,59 +392,88 @@ export default function EditGrievance() {
               rows="3"
             />
           </div>
-          
 
           {/* Attachments */}
           <div className="border-t px-6 py-4">
             <h3 className="text-sm font-semibold text-gray-700 mb-3">
               Attachments
             </h3>
+            
 
-           {Array.isArray(form.attachments) && form.attachments.length > 0 && (
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-    {form.attachments.map((file, index) => {
-      const isNewFile = file instanceof File;
+            {Array.isArray(form.attachments) && form.attachments.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                {form.attachments.map((file, index) => {
+                  const isNewFile = file instanceof File;
 
-      // 🔥 FIX: Build correct URL
-      const fileUrl = isNewFile
-        ? URL.createObjectURL(file)
-        : file.s3Url ||
-          `http://localhost:8080/uploads/${file.fileName || file}`;
+                  // 🔥 FIX: Build correct URL
+                  const fileUrl = isNewFile
+                    ? URL.createObjectURL(file)
+                    : file.s3Url ||
+                      `http://localhost:8080/uploads/${file.fileName || file}`;
 
-      const isImage =
-        file?.fileType?.startsWith("image") ||
-        file?.type?.startsWith("image") ||
-        fileUrl.match(/\.(jpg|jpeg|png|gif)$/i);
+                  const isImage =
+                    file?.fileType?.startsWith("image") ||
+                    file?.type?.startsWith("image") ||
+                    fileUrl.match(/\.(jpg|jpeg|png|gif)$/i);
 
-      return (
-        <div
-          key={index}
-          className="border rounded-lg overflow-hidden hover:shadow transition"
-        >
-          {isImage && (
-            <img
-              src={fileUrl}
-              alt={file.fileName || file.name || `Attachment ${index + 1}`}
-              className="w-full h-40 object-cover"
-            />
-          )}
+                  return (
+                    <div
+                      key={index}
+                      className="border rounded-lg overflow-hidden hover:shadow transition p-3"
+                    >
+                      {!isNewFile && (
+                        <div className="mb-2">
+                          <input
+                            type="checkbox"
+                            onChange={() =>
+                              handleSelectAttachment(file.attachmentId)
+                            }
+                            checked={selectedAttachments.includes(
+                              file.attachmentId,
+                            )}
+                          />
+                        </div>
+                      )}
 
-          <div className="p-2 text-xs">
-            <p className="font-semibold truncate">
-              {file.fileName || file.name || file}
-            </p>
-          </div>
-        </div>
-      );
-    })}
-  </div>
-)}
+                      {isImage && (
+                        <img
+                          src={fileUrl}
+                          alt={
+                            file.fileName ||
+                            file.name ||
+                            `Attachment ${index + 1}`
+                          }
+                          className="w-full h-40 object-cover"
+                        />
+                      )}
 
+                      <div className="p-2 text-xs">
+                        <p className="font-semibold truncate">
+                          {file.fileName || file.name || file}
+                        </p>
+                      </div>
+                      
+                    </div>
+                    
+                  );
+                })}
+                
+              </div>
+              
+            )}
+            <button
+                type="button"
+                onClick={handleDeleteSelected}
+                className="px-5 py-2 rounded-md bg-red-600 text-white  hover:bg-red-700"
+              >
+                Delete 
+              </button>
 
             <div>
               <label className="block text-sm font-medium text-gray-600 mb-1">
                 Upload New Attachments (Images / PDF)
               </label>
+              
               <input
                 type="file"
                 multiple
@@ -393,6 +485,7 @@ export default function EditGrievance() {
                 file:bg-blue-50 file:text-blue-700
                 hover:file:bg-blue-100"
               />
+             
             </div>
           </div>
 
@@ -400,7 +493,7 @@ export default function EditGrievance() {
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="px-4 py-2 rounded-md bg-gray-100 hover:bg-gray-200"
+              className="px-5 py-2 rounded-md bg-gray-100 hover:bg-gray-200"
             >
               Cancel
             </button>
@@ -411,9 +504,8 @@ export default function EditGrievance() {
               Update Grievance
             </button>
           </div>
-          </form>
+        </form>
       </div>
     </div>
   );
 }
-

@@ -497,3 +497,26 @@ export const exportGrievances = async (grievanceIds) => {
     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   });
 };
+//=================delete ATTACHMENT=================
+export const deleteAttachments = async (attachmentIds) => {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(
+    `${BASE_URL}/grievances/attachments`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(attachmentIds),
+    }
+  );
+
+  if (!response.ok) {
+    await handleAuthError(response);
+    throw new Error("Failed to delete attachments");
+  }
+
+  return response;
+};
