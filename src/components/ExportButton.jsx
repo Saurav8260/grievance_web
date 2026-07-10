@@ -47,6 +47,13 @@ export default function ExportButton({ selectedIds }) {
       >
         {loading ? "Exporting..." : "Export Excel"}
       </button>
+        <button
+        onClick={handleExport}
+        disabled={loading}
+        className="bg-green-600 text-white px-4 py-2 rounded"
+      >
+        {loading ? "Exporting..." : "Export PDF"}
+      </button>
     </div>
   );
 }

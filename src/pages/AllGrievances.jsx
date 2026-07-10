@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import GrievanceTable from "../components/GrievanceTable";
-import { fetchGrievances, exportGrievances, deleteGrievances } from "../api/userService";
+import { fetchGrievances, exportGrievances, deleteGrievances,exportGrievancesPdf } from "../api/userService";
 import { useTableFilter } from "../hooks/useTableFilter";
 import Pagination from "../components/Pagination";
 
@@ -72,7 +72,7 @@ useEffect(() => {
       let fileName = `Grievance_Report_${Date.now()}`;
 
       if (format === "EXCEL") fileName += ".xlsx";
-      // if (format === "PDF") fileName += ".pdf";
+      if (format === "PDF") fileName += ".pdf";
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -296,6 +296,12 @@ useEffect(() => {
           Export Excel
         </button>
         <button
+          onClick={() => handleExport("PDF")}
+          className="px-4 py-2 bg-green-600 text-white rounded-md text-sm"
+        >
+          Export Pdf
+        </button>
+        <button
           onClick={handleDelete}
           disabled={selectedIds.length === 0}
           className={`px-4 py-2 rounded-md text-sm text-white ${
@@ -307,12 +313,12 @@ useEffect(() => {
           Delete Selected
         </button>
 
-        {/* <button
+         {/* <button
           onClick={() => handleExport("PDF")}
           className="px-4 py-2 bg-red-600 text-white rounded-md text-sm"
         >
           Export PDF
-        </button> */}
+        </button>  */}
       </div>
 
       <div className="overflow-x-auto">

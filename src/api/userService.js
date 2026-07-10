@@ -488,6 +488,8 @@ export const exportGrievances = async (grievanceIds) => {
     body: JSON.stringify({
       grievanceIds,
       format: "EXCEL",
+      
+      
     }),
   });
 
@@ -495,6 +497,33 @@ export const exportGrievances = async (grievanceIds) => {
 
   return new Blob([blob], {
     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  });
+};
+//=================EXPORT GRIEVANCES (PDF)=================
+export const exportGrievancesPdf = async (grievanceIds) => {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${BASE_URL}/grievances/export`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+      Accept: "application/pdf",
+    },
+    body: JSON.stringify({
+      grievanceIds,
+      format: "PDF",
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error("PDF export failed");
+  }
+
+  const blob = await response.blob();
+
+  return new Blob([blob], {
+    type: "application/pdf",
   });
 };
 //=================delete ATTACHMENT=================
