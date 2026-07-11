@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import GrievanceTable from "../components/GrievanceTable";
-import { fetchGrievances, exportGrievances, deleteGrievances,exportGrievancesPdf } from "../api/userService";
+import { fetchGrievances, exportGrievances, deleteGrievances, } from "../api/userService";
 import { useTableFilter } from "../hooks/useTableFilter";
 import Pagination from "../components/Pagination";
 
@@ -297,7 +297,7 @@ useEffect(() => {
         </button>
         <button
           onClick={() => handleExport("PDF")}
-          className="px-4 py-2 bg-green-600 text-white rounded-md text-sm"
+          className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm"
         >
           Export Pdf
         </button>

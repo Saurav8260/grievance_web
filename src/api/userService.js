@@ -474,58 +474,60 @@ export const uploadAttachments = async (files, grievanceId) => {
 };
 
 // ================= EXPORT GRIEVANCES (EXCEL / CSV / PDF) =================
-export const exportGrievances = async (grievanceIds) => {
+// export const exportGrievances = async (grievanceIds) => {
+//   const token = localStorage.getItem("token");
+
+//   const response = await fetch(`${BASE_URL}/grievances/export`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//       Authorization: `Bearer ${token}`,
+//       Accept:
+//         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+//     },
+//     body: JSON.stringify({
+//       grievanceIds,
+//       format: "EXCEL",
+      
+      
+//     }),
+//   });
+
+//   const blob = await response.blob();
+
+//   return new Blob([blob], {
+//     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+//   });
+// };
+
+export const exportGrievances = async (grievanceIds, format) => {
   const token = localStorage.getItem("token");
+
+  const isPdf = format === "PDF";
 
   const response = await fetch(`${BASE_URL}/grievances/export`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
-      Accept:
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "Content-Type": "application/json",
+      Accept: isPdf
+        ? "application/pdf"
+        : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     },
     body: JSON.stringify({
       grievanceIds,
-      format: "EXCEL",
-      
-      
-    }),
-  });
-
-  const blob = await response.blob();
-
-  return new Blob([blob], {
-    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-  });
-};
-//=================EXPORT GRIEVANCES (PDF)=================
-export const exportGrievancesPdf = async (grievanceIds) => {
-  const token = localStorage.getItem("token");
-
-  const response = await fetch(`${BASE_URL}/grievances/export`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-      Accept: "application/pdf",
-    },
-    body: JSON.stringify({
-      grievanceIds,
-      format: "PDF",
+      format,
     }),
   });
 
   if (!response.ok) {
-    throw new Error("PDF export failed");
+    const error = await response.text();
+    throw new Error(error || "Export failed");
   }
 
-  const blob = await response.blob();
-
-  return new Blob([blob], {
-    type: "application/pdf",
-  });
+  return response.blob();
 };
+
 //=================delete ATTACHMENT=================
 export const deleteAttachments = async (attachmentIds) => {
   const token = localStorage.getItem("token");
